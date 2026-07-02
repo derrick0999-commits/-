@@ -151,7 +151,11 @@ function drawDepthChart(entries, config = {}) {
   ctx.fillStyle = "#5c6f82";
   ctx.font = "9px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("虧損深度 (%)", pad.left / 2, pad.top + chartH / 2);
+  ctx.save();
+  ctx.translate(10, pad.top + chartH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText("虧損深度 (%)", 0, 0);
+  ctx.restore();
   if (shares > 0 && costBasis > 0) {
     ctx.save();
     ctx.translate(w - 10, pad.top + chartH / 2);
