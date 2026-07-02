@@ -42,7 +42,7 @@ function createBubbles(lossPct) {
   }
 }
 
-function drawDepthChart(entries) {
+function drawDepthChart(entries, config = {}) {
   const canvas = document.getElementById("depth-chart");
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
@@ -54,7 +54,7 @@ function drawDepthChart(entries) {
   canvas.height = h * dpr;
   ctx.scale(dpr, dpr);
 
-  const pad = { top: 14, right: 14, bottom: 28, left: 44 };
+  const pad = { top: 14, right: 50, bottom: 28, left: 44 };
   const chartW = w - pad.left - pad.right;
   const chartH = h - pad.top - pad.bottom;
 
@@ -118,10 +118,20 @@ function drawDepthChart(entries) {
   ctx.font = "10px sans-serif";
   ctx.textAlign = "right";
   const yLabels = 5;
+  const shares = Number(config?.shares) || 0;
+  const costBasis = Number(config?.cost_basis) || 0;
   for (let i = 0; i <= yLabels; i++) {
     const val = minLoss + ((maxLoss - minLoss) / yLabels) * i;
     const y = toY(val);
     ctx.fillText(`${val.toFixed(1)}%`, pad.left - 8, y + 4);
+
+    if (shares > 0 && costBasis > 0) {
+      // Invert loss% formula: price = market_value / shares, market_value = cost * (1 - loss%)
+      const price = (costBasis * (1 - val / 100)) / shares;
+      ctx.textAlign = "left";
+      ctx.fillText(`${price.toFixed(1)}`, pad.left + chartW + 8, y + 4);
+      ctx.textAlign = "right";
+    }
 
     ctx.strokeStyle = "rgba(255,255,255,0.35)";
     ctx.beginPath();
@@ -142,6 +152,13 @@ function drawDepthChart(entries) {
   ctx.font = "9px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("虧損深度 (%)", pad.left / 2, pad.top + chartH / 2);
+  if (shares > 0 && costBasis > 0) {
+    ctx.save();
+    ctx.translate(w - 10, pad.top + chartH / 2);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillText("收盤價 (NT$)", 0, 0);
+    ctx.restore();
+  }
 }
 
 function updateDashboard(latest, config) {
@@ -169,13 +186,13 @@ async function loadData() {
 
     if (entries.length === 0) {
       document.getElementById("milestone-text").textContent = "船隻待命中，尚未收到任何航海數據...";
-      drawDepthChart([]);
+      drawDepthChart([], config);
       return;
     }
 
     const latest = entries[entries.length - 1];
     updateDashboard(latest, config);
-    drawDepthChart(entries);
+    drawDepthChart(entries, config);
   } catch (err) {
     console.error("Failed to load price history:", err);
     document.getElementById("milestone-text").textContent = "通訊中斷，無法讀取航海數據（請確認 price-history.json 存在）";
@@ -190,7 +207,7 @@ window.addEventListener("resize", () => {
   resizeTimer = setTimeout(() => {
     fetch("data/price-history.json")
       .then((r) => r.json())
-      .then((data) => drawDepthChart(data.entries || []))
+      .then((data) => drawDepthChart(data.entries || [], data.config_snapshot || {}))
       .catch(() => {});
   }, 200);
 });
