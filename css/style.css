@@ -56,10 +56,7 @@ body {
   font-size: clamp(1.1rem, 2.8vw, 1.6rem);
   font-weight: 700;
   letter-spacing: 0.04em;
-  background: linear-gradient(135deg, #f57c00, #e53935);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1a2b3c;
 }
 
 .subtitle {
@@ -239,15 +236,20 @@ body {
 
 .stats-panel {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.4rem;
 }
 
 .stat-card {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 8px;
-  padding: 0.4rem 0.35rem;
+  padding: 0.35rem;
   text-align: center;
 }
 
@@ -344,10 +346,6 @@ body {
     height: auto;
     max-height: none;
     min-height: 100vh;
-  }
-
-  .stats-panel {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .milestone-tag {
