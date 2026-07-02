@@ -7,16 +7,17 @@
 }
 
 :root {
-  --sky-top: #1a1a2e;
-  --sky-bottom: #16213e;
-  --water-surface: #1e6f9f;
-  --water-mid: #0d4a6e;
-  --water-deep: #051e30;
+  --sky-top: #cfefff;
+  --sky-bottom: #8fd3ff;
+  --water-surface: #7fd0f2;
+  --water-mid: #3aa6d8;
+  --water-deep: #0b4a78;
   --accent-loss: #ff6b6b;
   --accent-gold: #ffd93d;
-  --text-primary: #e8f4f8;
-  --text-muted: #8ba4b4;
-  --card-bg: rgba(10, 30, 50, 0.85);
+  --text-primary: #0c2233;
+  --text-muted: #4e6a7a;
+  --card-bg: rgba(255, 255, 255, 0.78);
+  --card-border: rgba(20, 80, 120, 0.18);
   --ship-sink: 0px;
   --bubble-density: 5;
 }
@@ -27,7 +28,7 @@ html {
 
 body {
   font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  background: var(--sky-top);
+  background: linear-gradient(180deg, var(--sky-top) 0%, #dff6ff 35%, #c7efff 60%, #eaf9ff 100%);
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
@@ -36,7 +37,7 @@ body {
 .header {
   text-align: center;
   padding: 1.5rem 1rem 0.5rem;
-  background: linear-gradient(180deg, var(--sky-top), transparent);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
   position: relative;
   z-index: 10;
 }
@@ -70,13 +71,21 @@ body {
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 1.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(16, 74, 110, 0.18);
 }
 
 .sky {
   position: absolute;
   inset: 0 0 40%;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 60%, #0f3460 100%);
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 65%, #6ac7f0 100%);
+}
+
+.day-decor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .water {
@@ -106,13 +115,13 @@ body {
 }
 
 .wave-2 {
-  fill: #2580b0;
+  fill: #6fc8ef;
   opacity: 0.7;
   animation: wave-drift 8s ease-in-out infinite reverse;
 }
 
 .wave-3 {
-  fill: #1a6a96;
+  fill: #55b7e3;
   opacity: 0.5;
   animation: wave-drift 10s ease-in-out infinite;
   animation-delay: -2s;
@@ -137,13 +146,13 @@ body {
   transform: translateX(-50%) translateY(var(--ship-sink));
   z-index: 4;
   transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 180px;
+  width: clamp(340px, 55vw, 560px);
 }
 
 .ship {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 10px 18px rgba(10, 40, 60, 0.25));
   animation: ship-rock 4s ease-in-out infinite;
 }
 
@@ -165,7 +174,7 @@ body {
   position: absolute;
   bottom: -10px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.18));
   animation: bubble-rise linear infinite;
 }
 
@@ -191,7 +200,7 @@ body {
   transform: translateX(-50%);
   z-index: 6;
   background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.6rem 1.2rem;
   max-width: 90%;
@@ -213,7 +222,7 @@ body {
 .milestone-card p {
   display: inline;
   font-size: 0.85rem;
-  color: var(--accent-gold);
+  color: #8a5a00;
 }
 
 /* ── Stats Panel ── */
@@ -226,7 +235,7 @@ body {
 
 .stat-card {
   background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 1.2rem;
   text-align: center;
@@ -262,7 +271,7 @@ body {
 /* ── Depth Chart ── */
 .depth-chart-section {
   background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 1.5rem;
   backdrop-filter: blur(6px);
@@ -311,8 +320,8 @@ body {
   }
 
   .ship-container {
-    width: 140px;
-    top: 30%;
+    width: min(92vw, 420px);
+    top: 29%;
   }
 
   .milestone-card p {

@@ -15,30 +15,151 @@
 
   <main class="dashboard">
   <section class="ocean-scene" aria-label="沉船視覺化">
-    <div class="sky"></div>
+    <div class="sky">
+      <svg class="day-decor" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
+        <!-- clouds -->
+        <g opacity="0.8" fill="#ffffff">
+          <path d="M120,120c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H172c-28,0-44-14-52-32z"/>
+          <path d="M780,90c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H832c-28,0-44-14-52-32z"/>
+          <path d="M430,55c-8-24,16-44,38-37c8-16,30-19,42-6c14-9,34-3,38,13c18-5,35,9,35,28c0,18-15,26-35,26H471c-21,0-33-10-39-24z"/>
+        </g>
+        <!-- seagulls -->
+        <g stroke="#2a4f66" stroke-width="4" fill="none" opacity="0.55" stroke-linecap="round">
+          <path d="M160,70c20-18,40-18,60,0"/>
+          <path d="M220,70c20-18,40-18,60,0"/>
+          <path d="M980,60c18-14,36-14,54,0"/>
+          <path d="M1034,60c18-14,36-14,54,0"/>
+          <path d="M620,100c16-12,32-12,48,0"/>
+          <path d="M668,100c16-12,32-12,48,0"/>
+        </g>
+      </svg>
+    </div>
 
     <div class="bubbles" id="bubbles" aria-hidden="true"></div>
 
     <div class="ship-container" id="ship-container">
-      <svg class="ship" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg class="ship" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
-          <linearGradient id="hullGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#8B4513"/>
-            <stop offset="100%" stop-color="#5C2E0A"/>
+          <linearGradient id="cruiseHull" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1b2f3d"/>
+            <stop offset="100%" stop-color="#0f202a"/>
+          </linearGradient>
+          <linearGradient id="cruiseDeck" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2e4a5b"/>
+            <stop offset="100%" stop-color="#1d3442"/>
           </linearGradient>
         </defs>
-        <!-- Mast -->
-        <line x1="100" y1="15" x2="100" y2="55" stroke="#4a3728" stroke-width="3"/>
-        <polygon points="100,15 130,35 100,40" fill="#e8e0d0" opacity="0.9"/>
-        <!-- Hull -->
-        <path d="M 30 70 Q 100 90 170 70 L 160 85 Q 100 100 40 85 Z" fill="url(#hullGrad)"/>
-        <rect x="55" y="55" width="90" height="18" rx="2" fill="#6B3A1F"/>
-        <!-- Portholes -->
-        <circle cx="70" cy="64" r="4" fill="#87CEEB" opacity="0.7"/>
-        <circle cx="100" cy="64" r="4" fill="#87CEEB" opacity="0.5"/>
-        <circle cx="130" cy="64" r="4" fill="#87CEEB" opacity="0.3"/>
-        <!-- Waterline mark -->
-        <line x1="35" y1="72" x2="165" y2="72" stroke="#4a90c2" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+
+        <!-- big cruise ship silhouette -->
+        <g>
+          <!-- hull -->
+          <path d="M70,180
+                   C110,210 190,235 310,242
+                   H700
+                   C770,242 825,220 858,186
+                   L892,150
+                   L892,180
+                   C860,210 820,236 760,252
+                   C675,274 560,276 430,272
+                   C260,266 120,232 42,194
+                   L18,182
+                   Z"
+                fill="url(#cruiseHull)"/>
+
+          <!-- superstructure -->
+          <path d="M170,80
+                   H640
+                   C670,80 690,95 698,118
+                   L722,178
+                   H170
+                   Z"
+                fill="url(#cruiseDeck)"/>
+
+          <path d="M240,40
+                   H560
+                   C590,40 612,56 620,78
+                   L632,110
+                   H240
+                   Z"
+                fill="#375a6f" opacity="0.95"/>
+
+          <!-- bridge -->
+          <path d="M560,22
+                   H650
+                   C676,22 695,36 702,58
+                   L712,90
+                   H560
+                   Z"
+                fill="#2a4556" opacity="0.98"/>
+
+          <!-- funnels -->
+          <g>
+            <path d="M335,20 h70 l18,50 h-106 z" fill="#233c4c"/>
+            <path d="M455,20 h70 l18,50 h-106 z" fill="#233c4c"/>
+            <rect x="345" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
+            <rect x="465" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
+          </g>
+
+          <!-- mast -->
+          <rect x="705" y="20" width="8" height="70" fill="#1f3442"/>
+          <line x1="709" y1="35" x2="760" y2="60" stroke="#1f3442" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- windows (rows) -->
+          <g fill="#cfefff" opacity="0.25">
+            <!-- upper deck -->
+            <rect x="270" y="62" width="18" height="10" rx="2"/>
+            <rect x="296" y="62" width="18" height="10" rx="2"/>
+            <rect x="322" y="62" width="18" height="10" rx="2"/>
+            <rect x="348" y="62" width="18" height="10" rx="2"/>
+            <rect x="374" y="62" width="18" height="10" rx="2"/>
+            <rect x="400" y="62" width="18" height="10" rx="2"/>
+            <rect x="426" y="62" width="18" height="10" rx="2"/>
+            <rect x="452" y="62" width="18" height="10" rx="2"/>
+            <rect x="478" y="62" width="18" height="10" rx="2"/>
+            <rect x="504" y="62" width="18" height="10" rx="2"/>
+            <rect x="530" y="62" width="18" height="10" rx="2"/>
+
+            <!-- main deck -->
+            <rect x="210" y="104" width="22" height="12" rx="2"/>
+            <rect x="240" y="104" width="22" height="12" rx="2"/>
+            <rect x="270" y="104" width="22" height="12" rx="2"/>
+            <rect x="300" y="104" width="22" height="12" rx="2"/>
+            <rect x="330" y="104" width="22" height="12" rx="2"/>
+            <rect x="360" y="104" width="22" height="12" rx="2"/>
+            <rect x="390" y="104" width="22" height="12" rx="2"/>
+            <rect x="420" y="104" width="22" height="12" rx="2"/>
+            <rect x="450" y="104" width="22" height="12" rx="2"/>
+            <rect x="480" y="104" width="22" height="12" rx="2"/>
+            <rect x="510" y="104" width="22" height="12" rx="2"/>
+            <rect x="540" y="104" width="22" height="12" rx="2"/>
+            <rect x="570" y="104" width="22" height="12" rx="2"/>
+            <rect x="600" y="104" width="22" height="12" rx="2"/>
+          </g>
+
+          <!-- hull portholes -->
+          <g fill="#ffffff" opacity="0.16">
+            <circle cx="180" cy="198" r="6"/>
+            <circle cx="220" cy="206" r="6"/>
+            <circle cx="260" cy="212" r="6"/>
+            <circle cx="300" cy="216" r="6"/>
+            <circle cx="340" cy="219" r="6"/>
+            <circle cx="380" cy="220" r="6"/>
+            <circle cx="420" cy="221" r="6"/>
+            <circle cx="460" cy="221" r="6"/>
+            <circle cx="500" cy="221" r="6"/>
+            <circle cx="540" cy="220" r="6"/>
+            <circle cx="580" cy="219" r="6"/>
+            <circle cx="620" cy="216" r="6"/>
+            <circle cx="660" cy="212" r="6"/>
+            <circle cx="700" cy="206" r="6"/>
+          </g>
+
+          <!-- nameplate -->
+          <g>
+            <rect x="535" y="188" width="150" height="38" rx="8" fill="rgba(255,255,255,0.08)"/>
+            <text x="610" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#ffd93d" opacity="0.9">5386</text>
+          </g>
+        </g>
       </svg>
     </div>
 
