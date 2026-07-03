@@ -2,8 +2,9 @@ name: Update Stock Price
 
 on:
   schedule:
-    # Taipei 15:30 = UTC 07:30 (weekdays)
+    # Taipei 15:30 = UTC 07:30; backup 16:30 = UTC 08:30 (weekdays)
     - cron: "30 7 * * 1-5"
+    - cron: "30 8 * * 1-5"
   workflow_dispatch:
 
 permissions:
