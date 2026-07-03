@@ -51,7 +51,7 @@ def draw_icon(size: int) -> Image.Image:
     tw = bbox[2] - bbox[0]
     th = bbox[3] - bbox[1]
     tx = (size - tw) // 2
-    ty = int(size * 0.18)
+    ty = int(size * 0.12)
 
     glow = max(2, size // 120)
     for dx in range(-glow, glow + 1):
