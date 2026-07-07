@@ -2,6 +2,7 @@
 """Fetch daily close price and append to price-history.json."""
 
 import json
+import math
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -22,8 +23,16 @@ def load_json(path: Path) -> dict:
 
 def save_json(path: Path, data: dict) -> None:
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, ensure_ascii=False, indent=2, allow_nan=False)
         f.write("\n")
+
+
+def _is_valid_entry(entry: dict) -> bool:
+    try:
+        price = float(entry.get("close_price"))
+        return not math.isnan(price) and price > 0
+    except (TypeError, ValueError):
+        return False
 
 
 def fetch_close_price(ticker: str) -> tuple[str, float]:
@@ -36,6 +45,8 @@ def fetch_close_price(ticker: str) -> tuple[str, float]:
 
     last_row = hist.iloc[-1]
     close_price = float(last_row["Close"])
+    if math.isnan(close_price) or close_price <= 0:
+        raise RuntimeError(f"Invalid close price for {ticker}: {close_price}")
     date_str = last_row.name.strftime("%Y-%m-%d")
     return date_str, close_price
 
@@ -68,6 +79,8 @@ def main() -> int:
 
     history = load_json(HISTORY_PATH)
     entries = history.setdefault("entries", [])
+    entries = [e for e in entries if _is_valid_entry(e)]
+    history["entries"] = entries
 
     if entries and entries[-1].get("date") == date_str:
         print(f"Entry for {date_str} already exists, updating in place.")

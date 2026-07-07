@@ -57,14 +57,6 @@
       "remaining_pct": 77.84
     },
     {
-      "date": "2026-07-06",
-      "close_price": NaN,
-      "market_value": NaN,
-      "loss_amount": NaN,
-      "loss_pct": NaN,
-      "remaining_pct": NaN
-    },
-    {
       "date": "2026-07-07",
       "close_price": 441.5,
       "market_value": 3973500.0,
