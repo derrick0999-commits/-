@@ -8,6 +8,20 @@
   <meta name="theme-color" content="#8fd3ff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="青雲平步向下">
+  <script>
+    (function () {
+      var path = location.pathname;
+      var marker = "Stock-market-sinking-diagram";
+      var idx = path.indexOf(marker);
+      var base = idx >= 0
+        ? path.slice(0, idx + marker.length) + "/"
+        : (path.endsWith("/") ? path : path.replace(/[^/]+$/, "") || "/");
+      if (!base.endsWith("/")) base += "/";
+      var el = document.createElement("base");
+      el.href = base;
+      document.head.appendChild(el);
+    })();
+  </script>
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png?v=4">
@@ -142,6 +156,6 @@
     </footer>
   </div>
 
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=2"></script>
 </body>
 </html>

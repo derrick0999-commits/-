@@ -42,6 +42,10 @@ function createBubbles(lossPct) {
   }
 }
 
+function dataUrl() {
+  return `data/price-history.json?t=${Date.now()}`;
+}
+
 function drawDepthChart(entries, config = {}) {
   const canvas = document.getElementById("depth-chart");
   const ctx = canvas.getContext("2d");
@@ -174,7 +178,7 @@ function updateDashboard(latest, config) {
 
 async function loadData() {
   try {
-    const res = await fetch("data/price-history.json");
+    const res = await fetch(dataUrl());
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const entries = data.entries || [];
@@ -188,10 +192,16 @@ async function loadData() {
 
     const latest = entries[entries.length - 1];
     updateDashboard(latest, config);
-    drawDepthChart(entries, config);
+    try {
+      drawDepthChart(entries, config);
+    } catch (chartErr) {
+      console.error("Chart render failed:", chartErr);
+      document.getElementById("chart-meta").textContent = "走勢圖渲染失敗，數據已載入";
+    }
   } catch (err) {
     console.error("Failed to load price history:", err);
-    document.getElementById("milestone-text").textContent = "通訊中斷，無法讀取航海數據（請確認 price-history.json 存在）";
+    document.getElementById("milestone-text").textContent =
+      "通訊中斷，無法讀取航海數據（請重新整理或刪除主畫面捷徑後重加）";
   }
 }
 
@@ -201,7 +211,7 @@ let resizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    fetch("data/price-history.json")
+    fetch(dataUrl())
       .then((r) => r.json())
       .then((data) => drawDepthChart(data.entries || [], data.config_snapshot || {}))
       .catch(() => {});
