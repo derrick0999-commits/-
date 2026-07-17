@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>青雲(5386) 平步向下</title>
-  <meta name="description" content="幽默諷刺風格的股票虧損視覺化儀表板 — 看著你的投資隨波逐流，一路下沉。">
-  <meta name="theme-color" content="#8fd3ff">
+  <meta name="description" content="幽默諷刺風格的股票虧損視覺化 — 看著你的投資隨波逐流，一路下沉。">
+  <meta name="theme-color" content="#7eb8d9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="青雲平步向下">
   <script>
@@ -22,6 +22,9 @@
       document.head.appendChild(el);
     })();
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png?v=4">
@@ -30,125 +33,118 @@
 </head>
 <body>
   <div class="page">
-    <header class="header">
-      <h1 class="title">青雲(5386) 平步向下</h1>
-      <p class="subtitle">投資組合海事事故即時通報 · 純娛樂</p>
-    </header>
+    <section class="hero" aria-label="沉船主視覺">
+      <div class="sky">
+        <svg class="day-decor" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
+          <g opacity="0.85" fill="#ffffff">
+            <path d="M120,120c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H172c-28,0-44-14-52-32z"/>
+            <path d="M780,90c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H832c-28,0-44-14-52-32z"/>
+          </g>
+          <g stroke="#5a7f96" stroke-width="3" fill="none" opacity="0.4" stroke-linecap="round">
+            <path d="M160,70c20-18,40-18,60,0"/>
+            <path d="M980,60c18-14,36-14,54,0"/>
+          </g>
+        </svg>
 
-    <main class="dashboard">
-      <section class="ocean-scene" aria-label="沉船視覺化">
-        <div class="milestone-tag" id="milestone-card">
-          <span class="milestone-icon">⚓</span>
-          <p id="milestone-text">正在讀取航海日誌...</p>
-        </div>
+        <header class="hero-brand">
+          <p class="brand-ticker">5386.TWO</p>
+          <h1 class="brand-title">青雲<span class="brand-aside">平步向下</span></h1>
+          <p class="brand-support" id="milestone-text">正在讀取航海日誌...</p>
+        </header>
+      </div>
 
-        <div class="sky">
-          <svg class="day-decor" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
-            <g opacity="0.85" fill="#ffffff">
-              <path d="M120,120c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H172c-28,0-44-14-52-32z"/>
-              <path d="M780,90c-10-30,20-55,48-46c10-20,38-24,54-8c18-12,44-4,50,16c24-6,46,12,46,36c0,24-20,34-46,34H832c-28,0-44-14-52-32z"/>
-            </g>
-            <g stroke="#5a7f96" stroke-width="3" fill="none" opacity="0.45" stroke-linecap="round">
-              <path d="M160,70c20-18,40-18,60,0"/>
-              <path d="M980,60c18-14,36-14,54,0"/>
-            </g>
-          </svg>
-        </div>
+      <div class="bubbles" id="bubbles" aria-hidden="true"></div>
 
-        <div class="bubbles" id="bubbles" aria-hidden="true"></div>
-
-        <div class="ship-container" id="ship-container">
-          <svg class="ship" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="cruiseHull" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1b2f3d"/>
-                <stop offset="100%" stop-color="#0f202a"/>
-              </linearGradient>
-              <linearGradient id="cruiseDeck" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#2e4a5b"/>
-                <stop offset="100%" stop-color="#1d3442"/>
-              </linearGradient>
-            </defs>
+      <div class="ship-container" id="ship-container">
+        <svg class="ship" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="cruiseHull" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1b2f3d"/>
+              <stop offset="100%" stop-color="#0f202a"/>
+            </linearGradient>
+            <linearGradient id="cruiseDeck" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#2e4a5b"/>
+              <stop offset="100%" stop-color="#1d3442"/>
+            </linearGradient>
+          </defs>
+          <g>
+            <path d="M70,180 C110,210 190,235 310,242 H700 C770,242 825,220 858,186 L892,150 L892,180 C860,210 820,236 760,252 C675,274 560,276 430,272 C260,266 120,232 42,194 L18,182 Z" fill="url(#cruiseHull)"/>
+            <path d="M170,80 H640 C670,80 690,95 698,118 L722,178 H170 Z" fill="url(#cruiseDeck)"/>
+            <path d="M240,40 H560 C590,40 612,56 620,78 L632,110 H240 Z" fill="#375a6f" opacity="0.95"/>
+            <path d="M560,22 H650 C676,22 695,36 702,58 L712,90 H560 Z" fill="#2a4556"/>
             <g>
-              <path d="M70,180 C110,210 190,235 310,242 H700 C770,242 825,220 858,186 L892,150 L892,180 C860,210 820,236 760,252 C675,274 560,276 430,272 C260,266 120,232 42,194 L18,182 Z" fill="url(#cruiseHull)"/>
-              <path d="M170,80 H640 C670,80 690,95 698,118 L722,178 H170 Z" fill="url(#cruiseDeck)"/>
-              <path d="M240,40 H560 C590,40 612,56 620,78 L632,110 H240 Z" fill="#375a6f" opacity="0.95"/>
-              <path d="M560,22 H650 C676,22 695,36 702,58 L712,90 H560 Z" fill="#2a4556"/>
-              <g>
-                <path d="M335,20 h70 l18,50 h-106 z" fill="#233c4c"/>
-                <path d="M455,20 h70 l18,50 h-106 z" fill="#233c4c"/>
-                <rect x="345" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
-                <rect x="465" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
-              </g>
-              <rect x="705" y="20" width="8" height="70" fill="#1f3442"/>
-              <line x1="709" y1="35" x2="760" y2="60" stroke="#1f3442" stroke-width="5" stroke-linecap="round"/>
-              <g fill="#cfefff" opacity="0.25">
-                <rect x="270" y="62" width="18" height="10" rx="2"/>
-                <rect x="322" y="62" width="18" height="10" rx="2"/>
-                <rect x="374" y="62" width="18" height="10" rx="2"/>
-                <rect x="426" y="62" width="18" height="10" rx="2"/>
-                <rect x="478" y="62" width="18" height="10" rx="2"/>
-                <rect x="530" y="62" width="18" height="10" rx="2"/>
-                <rect x="210" y="104" width="22" height="12" rx="2"/>
-                <rect x="270" y="104" width="22" height="12" rx="2"/>
-                <rect x="330" y="104" width="22" height="12" rx="2"/>
-                <rect x="390" y="104" width="22" height="12" rx="2"/>
-                <rect x="450" y="104" width="22" height="12" rx="2"/>
-                <rect x="510" y="104" width="22" height="12" rx="2"/>
-                <rect x="570" y="104" width="22" height="12" rx="2"/>
-              </g>
-              <g>
-                <rect x="535" y="188" width="150" height="38" rx="8" fill="rgba(255,255,255,0.08)"/>
-                <text x="610" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#ffd93d" opacity="0.9">5386</text>
-              </g>
+              <path d="M335,20 h70 l18,50 h-106 z" fill="#233c4c"/>
+              <path d="M455,20 h70 l18,50 h-106 z" fill="#233c4c"/>
+              <rect x="345" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
+              <rect x="465" y="36" width="74" height="8" fill="#ff8c42" opacity="0.85"/>
             </g>
-          </svg>
-        </div>
+            <rect x="705" y="20" width="8" height="70" fill="#1f3442"/>
+            <line x1="709" y1="35" x2="760" y2="60" stroke="#1f3442" stroke-width="5" stroke-linecap="round"/>
+            <g fill="#cfefff" opacity="0.25">
+              <rect x="270" y="62" width="18" height="10" rx="2"/>
+              <rect x="322" y="62" width="18" height="10" rx="2"/>
+              <rect x="374" y="62" width="18" height="10" rx="2"/>
+              <rect x="426" y="62" width="18" height="10" rx="2"/>
+              <rect x="478" y="62" width="18" height="10" rx="2"/>
+              <rect x="530" y="62" width="18" height="10" rx="2"/>
+              <rect x="210" y="104" width="22" height="12" rx="2"/>
+              <rect x="270" y="104" width="22" height="12" rx="2"/>
+              <rect x="330" y="104" width="22" height="12" rx="2"/>
+              <rect x="390" y="104" width="22" height="12" rx="2"/>
+              <rect x="450" y="104" width="22" height="12" rx="2"/>
+              <rect x="510" y="104" width="22" height="12" rx="2"/>
+              <rect x="570" y="104" width="22" height="12" rx="2"/>
+            </g>
+            <g>
+              <rect x="535" y="188" width="150" height="38" rx="8" fill="rgba(255,255,255,0.08)"/>
+              <text x="610" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#ffd93d" opacity="0.9">5386</text>
+            </g>
+          </g>
+        </svg>
+      </div>
 
-        <div class="water">
-          <svg class="waves" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
-            <path class="wave wave-1" d="M0,40 C150,60 300,20 450,40 C600,60 750,20 900,40 C1050,60 1200,20 1200,40 L1200,80 L0,80 Z"/>
-            <path class="wave wave-2" d="M0,50 C200,30 400,70 600,50 C800,30 1000,70 1200,50 L1200,80 L0,80 Z"/>
-            <path class="wave wave-3" d="M0,45 C100,65 250,25 400,45 C550,65 700,25 850,45 C1000,65 1150,25 1200,45 L1200,80 L0,80 Z"/>
-          </svg>
-          <div class="water-depth"></div>
+      <div class="water">
+        <svg class="waves" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+          <path class="wave wave-1" d="M0,40 C150,60 300,20 450,40 C600,60 750,20 900,40 C1050,60 1200,20 1200,40 L1200,80 L0,80 Z"/>
+          <path class="wave wave-2" d="M0,50 C200,30 400,70 600,50 C800,30 1000,70 1200,50 L1200,80 L0,80 Z"/>
+          <path class="wave wave-3" d="M0,45 C100,65 250,25 400,45 C550,65 700,25 850,45 C1000,65 1150,25 1200,45 L1200,80 L0,80 Z"/>
+        </svg>
+        <div class="water-depth"></div>
+      </div>
+    </section>
+
+    <main class="below-hero">
+      <section class="primary-metric" aria-label="沉沒深度">
+        <p class="primary-label">沉沒深度</p>
+        <p class="primary-value">
+          <span id="loss-pct">—</span><span class="primary-unit">%</span>
+        </p>
+        <p class="primary-loss">
+          累計虧損 <span id="loss-amount">—</span> 元
+        </p>
+      </section>
+
+      <section class="secondary-stats" aria-label="輔助數據">
+        <div class="secondary-item">
+          <span class="secondary-label">今日收盤</span>
+          <span class="secondary-value"><span id="close-price">—</span> 元</span>
+        </div>
+        <div class="secondary-divider" aria-hidden="true"></div>
+        <div class="secondary-item">
+          <span class="secondary-label">殘餘本金</span>
+          <span class="secondary-value"><span id="remaining-pct">—</span>%</span>
         </div>
       </section>
 
-      <div class="bottom-panel">
-        <section class="stats-panel" aria-label="虧損數據">
-          <div class="stat-card stat-loss">
-            <span class="stat-label">累計虧損</span>
-            <span class="stat-value" id="loss-amount">—</span>
-            <span class="stat-unit">NT$</span>
-          </div>
-          <div class="stat-card stat-pct">
-            <span class="stat-label">沉沒深度</span>
-            <span class="stat-value" id="loss-pct">—</span>
-            <span class="stat-unit">%</span>
-          </div>
-          <div class="stat-card stat-price">
-            <span class="stat-label">今日收盤</span>
-            <span class="stat-value" id="close-price">—</span>
-            <span class="stat-unit">元</span>
-          </div>
-          <div class="stat-card stat-remaining">
-            <span class="stat-label">殘餘本金</span>
-            <span class="stat-value" id="remaining-pct">—</span>
-            <span class="stat-unit">%</span>
-          </div>
-        </section>
-
-        <section class="depth-chart-section" aria-label="深度走勢圖">
-          <div class="chart-header">
-            <h2 class="section-title">海底深度剖面 · 虧損走勢</h2>
-            <p class="section-meta" id="chart-meta">載入中...</p>
-          </div>
-          <div class="depth-chart-wrapper">
-            <canvas id="depth-chart"></canvas>
-          </div>
-        </section>
-      </div>
+      <section class="depth-chart-section" aria-label="深度走勢圖">
+        <div class="chart-header">
+          <h2 class="section-title">海底深度剖面</h2>
+          <p class="section-meta" id="chart-meta">載入中...</p>
+        </div>
+        <div class="depth-chart-wrapper">
+          <canvas id="depth-chart"></canvas>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
@@ -156,6 +152,6 @@
     </footer>
   </div>
 
-  <script src="js/app.js?v=3"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>

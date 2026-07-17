@@ -19,7 +19,7 @@ function getMilestone(lossPct) {
 }
 
 function updateShipPosition(lossPct) {
-  const maxSink = 65;
+  const maxSink = 72;
   const sinkPx = Math.min(lossPct / 100, 1) * maxSink;
   document.documentElement.style.setProperty("--ship-sink", `${sinkPx}px`);
 }
@@ -56,15 +56,17 @@ function drawDepthChart(entries, config = {}) {
 
   canvas.width = w * dpr;
   canvas.height = h * dpr;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
 
-  const pad = { top: 14, right: 50, bottom: 28, left: 44 };
+  const pad = { top: 16, right: 18, bottom: 28, left: 46 };
   const chartW = w - pad.left - pad.right;
   const chartH = h - pad.top - pad.bottom;
 
   if (entries.length === 0) {
-    ctx.fillStyle = "#5c6f82";
-    ctx.font = "12px sans-serif";
+    ctx.fillStyle = "#3d5568";
+    ctx.font = "500 13px 'Noto Sans TC', sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("尚無歷史資料，等待首次收盤更新...", w / 2, h / 2);
     return;
@@ -74,11 +76,11 @@ function drawDepthChart(entries, config = {}) {
   const maxLoss = Math.max(...lossPcts, 10);
   const minLoss = Math.min(...lossPcts, 0);
 
-  const grad = ctx.createLinearGradient(0, pad.top, 0, h - pad.bottom);
-  grad.addColorStop(0, "#b8e4f8");
-  grad.addColorStop(0.5, "#6ec4e8");
-  grad.addColorStop(1, "#1a6a9e");
-  ctx.fillStyle = grad;
+  const waterGrad = ctx.createLinearGradient(0, pad.top, 0, h - pad.bottom);
+  waterGrad.addColorStop(0, "#b7dff2");
+  waterGrad.addColorStop(0.45, "#5aafd4");
+  waterGrad.addColorStop(1, "#0f4f78");
+  ctx.fillStyle = waterGrad;
   ctx.fillRect(pad.left, pad.top, chartW, chartH);
 
   const xStep = entries.length > 1 ? chartW / (entries.length - 1) : chartW / 2;
@@ -96,48 +98,49 @@ function drawDepthChart(entries, config = {}) {
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   });
-  ctx.strokeStyle = "#e53935";
-  ctx.lineWidth = 2;
+
+  ctx.strokeStyle = "#c45c26";
+  ctx.lineWidth = 2.25;
   ctx.stroke();
 
   ctx.lineTo(pad.left + (entries.length - 1) * xStep, pad.top + chartH);
   ctx.lineTo(pad.left, pad.top + chartH);
   ctx.closePath();
   const fillGrad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
-  fillGrad.addColorStop(0, "rgba(229, 57, 53, 0.25)");
-  fillGrad.addColorStop(1, "rgba(229, 57, 53, 0.04)");
+  fillGrad.addColorStop(0, "rgba(196, 92, 38, 0.28)");
+  fillGrad.addColorStop(1, "rgba(196, 92, 38, 0.03)");
   ctx.fillStyle = fillGrad;
   ctx.fill();
 
+  const last = entries.length - 1;
   entries.forEach((entry, i) => {
     const x = pad.left + (entries.length > 1 ? i * xStep : chartW / 2);
     const y = toY(entry.loss_pct);
+    const isLast = i === last;
     ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = "#f57c00";
+    ctx.arc(x, y, isLast ? 4.5 : 2.75, 0, Math.PI * 2);
+    ctx.fillStyle = isLast ? "#8f3d14" : "#c45c26";
     ctx.fill();
+    if (isLast) {
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(143, 61, 20, 0.35)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
   });
 
-  ctx.fillStyle = "#5c6f82";
-  ctx.font = "10px sans-serif";
+  ctx.fillStyle = "#3d5568";
+  ctx.font = "500 11px 'Noto Sans TC', sans-serif";
   ctx.textAlign = "right";
-  const yLabels = 5;
-  const shares = Number(config?.shares) || 0;
-  const costBasis = Number(config?.cost_basis) || 0;
+  const yLabels = 4;
   for (let i = 0; i <= yLabels; i++) {
     const val = minLoss + ((maxLoss - minLoss) / yLabels) * i;
     const y = toY(val);
     ctx.fillText(`${val.toFixed(1)}%`, pad.left - 8, y + 4);
 
-    if (shares > 0 && costBasis > 0) {
-      // Invert loss% formula: price = market_value / shares, market_value = cost * (1 - loss%)
-      const price = (costBasis * (1 - val / 100)) / shares;
-      ctx.textAlign = "left";
-      ctx.fillText(`${price.toFixed(1)}`, pad.left + chartW + 8, y + 4);
-      ctx.textAlign = "right";
-    }
-
-    ctx.strokeStyle = "rgba(255,255,255,0.35)";
+    ctx.strokeStyle = "rgba(255,255,255,0.28)";
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(pad.left, y);
     ctx.lineTo(pad.left + chartW, y);
@@ -145,20 +148,12 @@ function drawDepthChart(entries, config = {}) {
   }
 
   ctx.textAlign = "center";
-  const labelInterval = Math.max(1, Math.floor(entries.length / 8));
+  const labelInterval = Math.max(1, Math.floor(entries.length / 6));
   entries.forEach((entry, i) => {
     if (i % labelInterval !== 0 && i !== entries.length - 1) return;
     const x = pad.left + (entries.length > 1 ? i * xStep : chartW / 2);
     ctx.fillText(entry.date.slice(5), x, h - pad.bottom + 16);
   });
-
-  if (shares > 0 && costBasis > 0) {
-    ctx.save();
-    ctx.translate(w - 10, pad.top + chartH / 2);
-    ctx.rotate(Math.PI / 2);
-    ctx.fillText("收盤價 (NT$)", 0, 0);
-    ctx.restore();
-  }
 }
 
 function updateDashboard(latest, config) {
@@ -173,7 +168,7 @@ function updateDashboard(latest, config) {
 
   const stockName = config?.stock_name || "青雲";
   document.getElementById("chart-meta").textContent =
-    `${stockName} · 成本 ${formatNumber(config?.cost_basis || 0)} 元 · 均價 ${config?.buy_price || "—"} 元 · 共 ${formatNumber(config?.shares || 0)} 股`;
+    `${stockName} · 成本 ${formatNumber(config?.cost_basis || 0)} 元 · 均價 ${config?.buy_price || "—"} 元`;
 }
 
 async function loadData() {
