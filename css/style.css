@@ -82,14 +82,6 @@ body {
   animation: rise-in 0.9s ease-out both;
 }
 
-.brand-ticker {
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  color: var(--ink-soft);
-  margin-bottom: 0.35rem;
-}
-
 .brand-title {
   font-family: var(--font-display);
   font-size: clamp(2.05rem, 7.2vw, 3.15rem);
@@ -191,16 +183,154 @@ body {
   width: min(78vw, 460px);
 }
 
+.ship-hit {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ship-hit:focus-visible {
+  outline: 2px solid var(--depth-accent);
+  outline-offset: 6px;
+}
+
 .ship {
   width: 100%;
   height: auto;
+  display: block;
   filter: drop-shadow(0 8px 14px rgba(10, 40, 60, 0.22));
   animation: ship-rock 4.5s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes ship-rock {
   0%, 100% { transform: rotate(-1.6deg); }
   50% { transform: rotate(1.6deg); }
+}
+
+.ship-hint {
+  position: absolute;
+  left: 50%;
+  top: -1.15rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: rgba(19, 38, 54, 0.62);
+  background: rgba(232, 242, 248, 0.78);
+  padding: 0.18rem 0.55rem;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 5;
+}
+
+.ship-hit.is-speaking .ship-hint,
+.ship-hint.is-hidden {
+  opacity: 0;
+}
+
+.speech-bubble {
+  position: absolute;
+  left: 50%;
+  top: 4%;
+  transform: translate(-50%, 0);
+  max-width: min(88vw, 280px);
+  width: max-content;
+  padding: 0.55rem 0.75rem;
+  background: #132636;
+  color: #f4f8fb;
+  font-size: clamp(0.78rem, 2.4vw, 0.88rem);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(10, 30, 45, 0.28);
+  z-index: 6;
+  animation: bubble-pop 0.35s ease-out both;
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: #132636;
+  border-bottom: 0;
+}
+
+.speech-bubble[hidden] {
+  display: none;
+}
+
+@keyframes bubble-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* Passenger micro-motions (position via parent SVG transform) */
+.pax-wave {
+  animation: pax-wave 1.4s ease-in-out infinite;
+  transform-origin: 0px 12px;
+  transform-box: fill-box;
+}
+
+.pax-cling {
+  animation: pax-cling 2.2s ease-in-out infinite;
+  transform-origin: center bottom;
+  transform-box: fill-box;
+}
+
+.pax-crouch {
+  animation: pax-crouch 3s ease-in-out infinite;
+  transform-origin: center bottom;
+  transform-box: fill-box;
+}
+
+.pax-hang {
+  animation: pax-hang 1.8s ease-in-out infinite;
+  transform-origin: center top;
+  transform-box: fill-box;
+}
+
+.pax-stern {
+  animation: pax-stern 2.6s ease-in-out infinite;
+}
+
+@keyframes pax-wave {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-10deg) translateY(-2px); }
+}
+
+@keyframes pax-cling {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+
+@keyframes pax-crouch {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.96); }
+}
+
+@keyframes pax-hang {
+  0%, 100% { transform: rotate(5deg); }
+  50% { transform: rotate(-8deg) translateY(3px); }
+}
+
+@keyframes pax-stern {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
 }
 
 .bubbles {
@@ -255,29 +385,29 @@ body {
 .primary-value {
   margin-top: 0.2rem;
   font-family: var(--font-display);
-  font-size: clamp(3rem, 12vw, 4.25rem);
+  font-size: clamp(2.75rem, 11.5vw, 4rem);
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.02em;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
   color: var(--depth-accent);
   font-variant-numeric: tabular-nums;
 }
 
 .primary-unit {
-  font-size: 0.42em;
-  margin-left: 0.08em;
-  vertical-align: super;
+  font-size: 0.38em;
+  margin-left: 0.12em;
+  vertical-align: baseline;
   font-weight: 600;
 }
 
-.primary-loss {
+.primary-depth {
   margin-top: 0.55rem;
-  font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+  font-size: clamp(0.95rem, 2.8vw, 1.08rem);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
-.primary-loss #loss-amount {
+.primary-depth #loss-pct {
   font-weight: 700;
   color: var(--depth-deep);
 }
@@ -420,7 +550,7 @@ body {
   }
 
   .primary-value {
-    font-size: 2.7rem;
+    font-size: 2.35rem;
   }
 
   .depth-chart-wrapper {

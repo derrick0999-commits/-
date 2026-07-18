@@ -7,6 +7,37 @@ const MILESTONES = [
   { max: Infinity, text: "沉入馬里亞納海溝，考古隊已列入未來挖掘清單" },
 ];
 
+const PASSENGER_ROASTS = [
+  { max: 15, lines: [
+    "甲板觀光客：「才跌一點，我是來度假的。」",
+    "有人拿出手機錄影，準備發限動證明自己很淡定。",
+  ]},
+  { max: 35, lines: [
+    "套牢乘客：「放久一點會回來的……對吧？」",
+    "有人死抓欄杆：均價還在水面上方，人已經半濕。",
+    "船頭那位還在喊：這叫健康回檔。",
+  ]},
+  { max: 55, lines: [
+    "廣播重複播放中：暫時性技術性回檔。",
+    "有人開始查「股票套牢怎麼辦」，搜尋紀錄已被朋友截圖。",
+    "加碼乘客從船尾探頭：「跌這麼深不買對不起自己。」",
+  ]},
+  { max: 75, lines: [
+    "救生艇旁還在討論要不要再攤平一次。",
+    "有人把成本均價默念成護身符，效果待驗證。",
+    "船長已放棄導航，改念長線投資經。",
+  ]},
+  { max: Infinity, lines: [
+    "深海套牢特等艙已客滿，歡迎下次再來。",
+    "考古隊預約導覽：這就是當年的「會漲回來」。",
+    "僅剩氣泡還在報價，乘客表示：我再觀望一下。",
+  ]},
+];
+
+let roastIndex = 0;
+let roastTimer = null;
+let currentLossPct = 0;
+
 function formatNumber(n) {
   return Math.round(n).toLocaleString("zh-TW");
 }
@@ -16,6 +47,13 @@ function getMilestone(lossPct) {
     if (lossPct < m.max) return m.text;
   }
   return MILESTONES[MILESTONES.length - 1].text;
+}
+
+function getRoastPool(lossPct) {
+  for (const bucket of PASSENGER_ROASTS) {
+    if (lossPct < bucket.max) return bucket.lines;
+  }
+  return PASSENGER_ROASTS[PASSENGER_ROASTS.length - 1].lines;
 }
 
 function updateShipPosition(lossPct) {
@@ -40,6 +78,39 @@ function createBubbles(lossPct) {
     bubble.style.animationDelay = `${Math.random() * 4}s`;
     container.appendChild(bubble);
   }
+}
+
+function showPassengerRoast() {
+  const bubble = document.getElementById("speech-bubble");
+  const shipHit = document.getElementById("ship-hit");
+  const hint = document.getElementById("ship-hint");
+  if (!bubble || !shipHit) return;
+
+  const pool = getRoastPool(currentLossPct);
+  const line = pool[roastIndex % pool.length];
+  roastIndex += 1;
+
+  bubble.hidden = false;
+  bubble.textContent = line;
+  // retrigger pop animation
+  bubble.style.animation = "none";
+  void bubble.offsetWidth;
+  bubble.style.animation = "";
+
+  shipHit.classList.add("is-speaking");
+  if (hint) hint.classList.add("is-hidden");
+
+  clearTimeout(roastTimer);
+  roastTimer = setTimeout(() => {
+    bubble.hidden = true;
+    shipHit.classList.remove("is-speaking");
+  }, 4200);
+}
+
+function initPassengerMode() {
+  const shipHit = document.getElementById("ship-hit");
+  if (!shipHit) return;
+  shipHit.addEventListener("click", showPassengerRoast);
 }
 
 function dataUrl() {
@@ -157,6 +228,7 @@ function drawDepthChart(entries, config = {}) {
 }
 
 function updateDashboard(latest, config) {
+  currentLossPct = latest.loss_pct;
   document.getElementById("loss-amount").textContent = formatNumber(latest.loss_amount);
   document.getElementById("loss-pct").textContent = latest.loss_pct.toFixed(2);
   document.getElementById("close-price").textContent = latest.close_price.toFixed(2);
@@ -200,6 +272,7 @@ async function loadData() {
   }
 }
 
+initPassengerMode();
 loadData();
 
 let resizeTimer;
