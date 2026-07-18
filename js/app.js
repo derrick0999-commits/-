@@ -7,34 +7,38 @@ const MILESTONES = [
   { max: Infinity, text: "沉入馬里亞納海溝，考古隊已列入未來挖掘清單" },
 ];
 
-const PASSENGER_ROASTS = [
-  { max: 15, lines: [
-    "甲板觀光客：「才跌一點，我是來度假的。」",
-    "有人拿出手機錄影，準備發限動證明自己很淡定。",
-  ]},
-  { max: 35, lines: [
-    "套牢乘客：「放久一點會回來的……對吧？」",
-    "有人死抓欄杆：均價還在水面上方，人已經半濕。",
-    "船頭那位還在喊：這叫健康回檔。",
-  ]},
-  { max: 55, lines: [
-    "廣播重複播放中：暫時性技術性回檔。",
-    "有人開始查「股票套牢怎麼辦」，搜尋紀錄已被朋友截圖。",
-    "加碼乘客從船尾探頭：「跌這麼深不買對不起自己。」",
-  ]},
-  { max: 75, lines: [
-    "救生艇旁還在討論要不要再攤平一次。",
-    "有人把成本均價默念成護身符，效果待驗證。",
-    "船長已放棄導航，改念長線投資經。",
-  ]},
-  { max: Infinity, lines: [
-    "深海套牢特等艙已客滿，歡迎下次再來。",
-    "考古隊預約導覽：這就是當年的「會漲回來」。",
-    "僅剩氣泡還在報價，乘客表示：我再觀望一下。",
-  ]},
-];
+/* Short lines per passenger — shown above each head */
+const PAX_LINES = {
+  wave: [
+    "救命啊均價！",
+    "手還舉著…",
+    "誰來接盤？",
+  ],
+  cling: [
+    "再撐一下…",
+    "欄杆我的命",
+    "不認虧！",
+  ],
+  crouch: [
+    "要攤平嗎",
+    "再算一次…",
+    "均價魔法",
+  ],
+  hang: [
+    "會回來的",
+    "健康回檔",
+    "長線持有",
+  ],
+  stern: [
+    "加碼中",
+    "跌深更好買",
+    "船尾續攤",
+  ],
+};
 
-let roastIndex = 0;
+const PAX_ORDER = ["wave", "cling", "crouch", "hang", "stern"];
+
+let roastRound = 0;
 let roastTimer = null;
 let currentLossPct = 0;
 
@@ -47,13 +51,6 @@ function getMilestone(lossPct) {
     if (lossPct < m.max) return m.text;
   }
   return MILESTONES[MILESTONES.length - 1].text;
-}
-
-function getRoastPool(lossPct) {
-  for (const bucket of PASSENGER_ROASTS) {
-    if (lossPct < bucket.max) return bucket.lines;
-  }
-  return PASSENGER_ROASTS[PASSENGER_ROASTS.length - 1].lines;
 }
 
 function updateShipPosition(lossPct) {
@@ -80,31 +77,52 @@ function createBubbles(lossPct) {
   }
 }
 
+function lineForPax(paxId, round) {
+  const lines = PAX_LINES[paxId] || ["…"];
+  // Deeper losses skew toward later (more desperate) lines
+  const depthBias = currentLossPct >= 50 ? 1 : 0;
+  return lines[(round + depthBias) % lines.length];
+}
+
 function showPassengerRoast() {
-  const bubble = document.getElementById("speech-bubble");
+  const callouts = document.getElementById("pax-callouts");
   const shipHit = document.getElementById("ship-hit");
   const hint = document.getElementById("ship-hint");
-  if (!bubble || !shipHit) return;
+  if (!callouts || !shipHit) return;
 
-  const pool = getRoastPool(currentLossPct);
-  const line = pool[roastIndex % pool.length];
-  roastIndex += 1;
+  const nodes = [...callouts.querySelectorAll(".pax-callout")];
+  if (nodes.length === 0) return;
 
-  bubble.hidden = false;
-  bubble.textContent = line;
-  // retrigger pop animation
-  bubble.style.animation = "none";
-  void bubble.offsetWidth;
-  bubble.style.animation = "";
+  // One-at-a-time roll call — avoids overlapping bubbles on a small ship
+  const active = roastRound % nodes.length;
+  callouts.hidden = false;
+  nodes.forEach((el, i) => {
+    const paxId = el.dataset.pax || PAX_ORDER[i];
+    if (i === active) {
+      el.hidden = false;
+      el.textContent = lineForPax(paxId, Math.floor(roastRound / nodes.length));
+      el.style.animation = "none";
+      void el.offsetWidth;
+      el.style.animation = "";
+    } else {
+      el.hidden = true;
+      el.textContent = "";
+    }
+  });
+  roastRound += 1;
 
   shipHit.classList.add("is-speaking");
   if (hint) hint.classList.add("is-hidden");
 
   clearTimeout(roastTimer);
   roastTimer = setTimeout(() => {
-    bubble.hidden = true;
+    callouts.hidden = true;
+    nodes.forEach((el) => {
+      el.hidden = true;
+      el.textContent = "";
+    });
     shipHit.classList.remove("is-speaking");
-  }, 4200);
+  }, 2800);
 }
 
 function initPassengerMode() {

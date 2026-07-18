@@ -199,12 +199,17 @@ body {
   outline-offset: 6px;
 }
 
+.ship-rock {
+  position: relative;
+  width: 100%;
+  animation: ship-rock 4.5s ease-in-out infinite;
+}
+
 .ship {
   width: 100%;
   height: auto;
   display: block;
   filter: drop-shadow(0 8px 14px rgba(10, 40, 60, 0.22));
-  animation: ship-rock 4.5s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -234,48 +239,58 @@ body {
   opacity: 0;
 }
 
-.speech-bubble {
+/* Tiny callouts above each passenger head */
+.pax-callouts {
   position: absolute;
-  left: 50%;
-  top: 4%;
-  transform: translate(-50%, 0);
-  max-width: min(88vw, 280px);
-  width: max-content;
-  padding: 0.55rem 0.75rem;
-  background: #132636;
-  color: #f4f8fb;
-  font-size: clamp(0.78rem, 2.4vw, 0.88rem);
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(10, 30, 45, 0.28);
+  inset: 0;
+  pointer-events: none;
   z-index: 6;
-  animation: bubble-pop 0.35s ease-out both;
 }
 
-.speech-bubble::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -7px;
-  transform: translateX(-50%);
-  border: 7px solid transparent;
-  border-top-color: #132636;
-  border-bottom: 0;
-}
-
-.speech-bubble[hidden] {
+.pax-callouts[hidden] {
   display: none;
 }
 
-@keyframes bubble-pop {
+.pax-callout {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  max-width: 4.2rem;
+  padding: 0.16rem 0.3rem;
+  background: rgba(19, 38, 54, 0.92);
+  color: #f4f8fb;
+  font-size: clamp(0.55rem, 1.9vw, 0.64rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: center;
+  white-space: normal;
+  box-shadow: 0 3px 8px rgba(10, 30, 45, 0.22);
+  animation: callout-pop 0.28s ease-out both;
+}
+
+.pax-callout[hidden] {
+  display: none;
+}
+
+.pax-callout::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(19, 38, 54, 0.92);
+  border-bottom: 0;
+}
+
+@keyframes callout-pop {
   from {
     opacity: 0;
-    transform: translate(-50%, 6px) scale(0.96);
+    transform: translate(-50%, calc(-100% + 4px)) scale(0.92);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: translate(-50%, -100%) scale(1);
   }
 }
 

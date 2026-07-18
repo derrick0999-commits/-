@@ -56,6 +56,7 @@
 
       <div class="ship-container" id="ship-container">
         <button type="button" class="ship-hit" id="ship-hit" aria-label="點船看套牢乘客">
+          <div class="ship-rock">
           <svg class="ship" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="cruiseHull" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -150,8 +151,15 @@
               </g>
             </g>
           </svg>
-          <span class="speech-bubble" id="speech-bubble" hidden></span>
-          <span class="ship-hint" id="ship-hint">點船 · 套牢乘客點名</span>
+          <div class="pax-callouts" id="pax-callouts" hidden aria-live="polite">
+            <span class="pax-callout" data-pax="wave" style="left:28.3%; top:12%"></span>
+            <span class="pax-callout" data-pax="cling" style="left:40.6%; top:14%"></span>
+            <span class="pax-callout" data-pax="crouch" style="left:52.8%; top:18%"></span>
+            <span class="pax-callout" data-pax="hang" style="left:80%; top:8%"></span>
+            <span class="pax-callout" data-pax="stern" style="left:22.8%; top:36%"></span>
+          </div>
+          </div>
+          <span class="ship-hint" id="ship-hint">點船 · 逐一點名</span>
         </button>
       </div>
 
@@ -204,6 +212,6 @@
     </footer>
   </div>
 
-  <script src="js/app.js?v=6"></script>
+  <script src="js/app.js?v=8"></script>
 </body>
 </html>
