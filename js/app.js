@@ -290,7 +290,8 @@ function popSpeech(line) {
   el.textContent = line.t;
   const cx = hero.clientWidth * 0.5 + (Math.random() * 40 - 20);
   el.style.left = `${cx}px`;
-  el.style.top = "18%";
+  // 從船附近冒出，上飄幅度小，不蓋標題
+  el.style.top = "42%";
   bubbles.appendChild(el);
   setTimeout(() => el.remove(), 3100);
 }

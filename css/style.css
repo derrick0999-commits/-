@@ -38,7 +38,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Stage：流式 flex；Hero 固定高；多餘高度由 spacer 吸收 ── */
+/* ── Stage：流式 flex；底部只留 safe-area，避免 CTA 下多一條空白帶 ── */
 .stage {
   display: flex;
   flex-direction: column;
@@ -50,10 +50,19 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   gap: clamp(0.4rem, 1.2vh, 0.7rem);
+  /* 與 body 同漸層：就算露底也連續，無可見斷層 */
+  background: linear-gradient(
+    180deg,
+    #7fb2d6 0%,
+    #4a90c2 18%,
+    #1e4d73 44%,
+    #0a2540 72%,
+    #01060f 100%
+  );
   padding:
     max(10px, env(safe-area-inset-top, 0px))
     env(safe-area-inset-right, 0px)
-    max(12px, env(safe-area-inset-bottom, 0px))
+    0
     env(safe-area-inset-left, 0px);
 }
 
@@ -87,13 +96,15 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* ── Hero：固定高度區間；船／海面在內部 absolute，不隨 dvh 拉開空洞 ── */
+/* ── Hero：適度 flex-grow 填滿中段；船／海面內部 absolute；裁切氣泡不蓋標題 ── */
 .hero {
   position: relative;
-  flex: 0 0 auto;
-  height: clamp(140px, 24vh, 200px);
+  flex: 1 1 auto;
+  min-height: clamp(130px, 22vh, 180px);
+  max-height: min(240px, 30vh);
   margin: 0;
   overflow: hidden;
+  contain: paint;
 }
 
 .waterline {
@@ -240,10 +251,11 @@ body {
 }
 
 @keyframes floatUp {
+  /* 只在 Hero 內微幅上飄，不衝出標題層 */
   0% { opacity: 0; transform: translateX(-50%) translateY(0) scale(0.7); }
-  16% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1); }
-  80% { opacity: 1; transform: translateX(-50%) translateY(-30px) scale(1); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-42px) scale(1.02); }
+  16% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(-16px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-22px) scale(1.02); }
 }
 
 .amb {
@@ -373,14 +385,14 @@ body {
   font-size: clamp(1.1rem, 5vw, 27px);
 }
 
-/* CTA：margin-top:auto 推到底；多餘高度成為 CTA 上方海洋（非走勢／三格之間） */
+/* CTA：貼齊螢幕底；safe-area 吃進按鈕內 padding，下方無深色空白帶 */
 .cta {
   flex: 0 0 auto;
-  margin: auto 16px 0;
-  width: calc(100% - 32px);
-  padding: 14px;
+  margin: auto 0 0;
+  width: 100%;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
   border: none;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
   background: var(--alarm);
   color: #1a0d05;
   font-family: "Noto Serif TC", serif;
@@ -399,7 +411,8 @@ body {
 /* 矮螢幕：縮小 Hero／字級，允許極小捲動優於重疊 */
 @media (max-height: 700px) {
   .hero {
-    height: clamp(110px, 22vh, 160px);
+    min-height: 110px;
+    max-height: 26vh;
   }
 
   .ship {
@@ -422,7 +435,8 @@ body {
 
 @media (max-height: 600px) {
   .hero {
-    height: 100px;
+    min-height: 96px;
+    max-height: 22vh;
   }
 
   .sunk .depth {
