@@ -1,0 +1,10 @@
+{
+  "actions": [
+    {
+      "date": "2026-07-20",
+      "cash_dividend": 1.5,
+      "stock_dividend_ratio": 0.5,
+      "label": "除權息（現金 1.5＋配股 50%）"
+    }
+  ]
+}

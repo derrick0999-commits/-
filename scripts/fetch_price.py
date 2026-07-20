@@ -10,6 +10,10 @@ from pathlib import Path
 import yfinance as yf
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).parent))
+
+from corporate_actions import compute_dual_metrics, load_actions  # noqa: E402
+
 CONFIG_PATH = ROOT / "config.json"
 HISTORY_PATH = ROOT / "data" / "price-history.json"
 
@@ -109,19 +113,25 @@ def fetch_close_price(ticker: str) -> tuple[str, float]:
     return date_str, close_price
 
 
-def compute_metrics(config: dict, close_price: float) -> dict:
-    shares = config["shares"]
-    cost_basis = config["cost_basis"]
-    market_value = round(close_price * shares, 2)
-    loss_amount = round(cost_basis - market_value, 2)
-    loss_pct = round((loss_amount / cost_basis) * 100, 2) if cost_basis else 0.0
-    remaining_pct = round(100 - loss_pct, 2)
-
+def compute_metrics(config: dict, close_price: float, as_of: str | None = None) -> dict:
+    """Dual-track metrics via corporate_actions; raw close is never rewritten."""
+    date_str = as_of or datetime.now(TAIPEI).strftime("%Y-%m-%d")
+    dual = compute_dual_metrics(config, close_price, date_str, load_actions())
+    # Persist fields the dashboard / history consumers expect, plus dual-track extras.
     return {
-        "market_value": market_value,
-        "loss_amount": loss_amount,
-        "loss_pct": loss_pct,
-        "remaining_pct": remaining_pct,
+        "market_value": dual["market_value"],
+        "total_value": dual["total_value"],
+        "cash_received": dual["cash_received"],
+        "shares": dual["shares"],
+        "adj_close": dual["adj_close"],
+        "restored_buy_price": dual["restored_buy_price"],
+        "restored_cost_basis": dual["restored_cost_basis"],
+        "loss_amount": dual["loss_amount"],
+        "loss_pct": dual["loss_pct"],
+        "remaining_pct": dual["remaining_pct"],
+        "price_loss_amount": dual["price_loss_amount"],
+        "price_loss_pct": dual["price_loss_pct"],
+        "price_remaining_pct": dual["price_remaining_pct"],
     }
 
 
@@ -144,7 +154,7 @@ def main() -> int:
         print(f"Entry for {date_str} already exists, updating in place.")
         entries.pop()
 
-    metrics = compute_metrics(config, close_price)
+    metrics = compute_metrics(config, close_price, date_str)
     entry = {
         "date": date_str,
         "close_price": round(close_price, 2),

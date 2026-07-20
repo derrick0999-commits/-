@@ -31,7 +31,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png?v=4">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
   <div class="page">
@@ -177,7 +177,7 @@
 
     <main class="below-hero">
       <section class="primary-metric" aria-label="累計虧損">
-        <p class="primary-label">累計虧損</p>
+        <p class="primary-label">累計虧損 · 總報酬</p>
         <p class="primary-value">
           <span id="loss-amount">—</span><span class="primary-unit">元</span>
         </p>
@@ -193,8 +193,18 @@
         </div>
         <div class="secondary-divider" aria-hidden="true"></div>
         <div class="secondary-item">
-          <span class="secondary-label">殘餘本金</span>
-          <span class="secondary-value"><span id="remaining-pct">—</span>%</span>
+          <span class="secondary-label">價差深度</span>
+          <span class="secondary-value"><span id="price-loss-pct">—</span>%</span>
+        </div>
+        <div class="secondary-divider" aria-hidden="true"></div>
+        <div class="secondary-item">
+          <span class="secondary-label">還原均價</span>
+          <span class="secondary-value"><span id="restored-buy">—</span> 元</span>
+        </div>
+        <div class="secondary-divider" aria-hidden="true"></div>
+        <div class="secondary-item">
+          <span class="secondary-label">持有股數</span>
+          <span class="secondary-value"><span id="effective-shares">—</span></span>
         </div>
       </section>
 
@@ -214,6 +224,6 @@
     </footer>
   </div>
 
-  <script src="js/app.js?v=9"></script>
+  <script src="js/app.js?v=10"></script>
 </body>
 </html>
