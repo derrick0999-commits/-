@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-  <title>青雲(5386) 沉沒模擬器</title>
-  <meta name="description" content="即時沉沒模擬器 — 把套牢深度變成海洋垂直剖面，嘲諷友人的投資沉沒現況。">
-  <meta name="theme-color" content="#0a2840">
+  <title>青雲 · 沉沒模擬器</title>
+  <meta name="description" content="即時沉沒模擬器 — 把套牢深度變成海洋剖面，嘲諷友人的投資沉沒現況。">
+  <meta name="theme-color" content="#4a90c2">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,87 +26,102 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png?v=4">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
-  <div class="page">
-    <header class="sim-header">
-      <div class="sim-brand">
-        <p class="sim-kicker">5386.TWO · 即時沉沒模擬器</p>
-        <h1 class="sim-title">青雲<span class="sim-aside">平步向下</span></h1>
-      </div>
-      <blockquote class="captain-quote" id="captain-quote">船長正在翻航海日誌…</blockquote>
+  <div class="stage" id="stage">
+    <header class="top">
+      <p class="eyebrow">5386.TWO · 即時沉沒模擬器</p>
+      <h1 class="title">青雲</h1>
+      <p class="sub">平步向下</p>
     </header>
 
-    <section class="ocean-panel" aria-label="海洋垂直剖面">
-      <div class="ocean-meta">
-        <p class="ocean-label">處損深度 <strong id="depth-pct">—</strong>%</p>
-        <p class="ocean-sub" id="ocean-sub">載入中…</p>
-      </div>
-      <div class="ocean-frame">
-        <canvas id="ocean-canvas" aria-label="下潛軌跡與船位"></canvas>
-        <div class="milestone-rail" id="milestone-rail" aria-hidden="true"></div>
-      </div>
-    </section>
-
-    <section class="metric-strip" aria-label="即時損益">
-      <div class="metric-main">
-        <span class="metric-label">累計虧損 · 總報酬</span>
-        <span class="metric-value"><span id="loss-amount">—</span><small>元</small></span>
-        <span class="metric-sub">收盤 <span id="close-price">—</span> · 解套線 <span id="breakeven-price">—</span></span>
-      </div>
-    </section>
-
-    <section class="cruel-panel" aria-label="殘酷儀表板">
-      <h2 class="panel-title">殘酷儀表板</h2>
-      <div class="cruel-grid">
-        <article class="cruel-card">
-          <span class="cruel-label">要解套還需漲</span>
-          <span class="cruel-value">+<span id="need-rise">—</span>%</span>
-        </article>
-        <article class="cruel-card">
-          <span class="cruel-label">股利年化殖利率</span>
-          <span class="cruel-value"><span id="div-yield">—</span>%</span>
-        </article>
-        <article class="cruel-card">
-          <span class="cruel-label">只靠股利回本</span>
-          <span class="cruel-value"><span id="div-years">—</span> 年</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="action-bar">
-      <button type="button" class="btn-share" id="btn-share">生成分享卡 PNG</button>
-      <button type="button" class="btn-roast" id="btn-roast" aria-label="點此點名套牢乘客">點名套牢乘客 · 彩蛋</button>
-    </section>
-
-    <div class="roast-layer" id="roast-layer" hidden aria-live="polite">
-      <div class="roast-ship-wrap">
-        <svg class="roast-ship" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <g fill="#101820" stroke="#e8f4fb" stroke-width="1.4" stroke-linejoin="round">
-            <g transform="translate(255,86)"><circle cx="0" cy="-20" r="6.2"/><path d="M0,-13 v20 M0,-6 l-10,7 M0,-6 l11,-11 M0,7 l-7,13 M0,7 l7,13" fill="none" stroke-width="3.2" stroke-linecap="round"/></g>
-            <g transform="translate(365,90)"><circle cx="0" cy="-18" r="5.6"/><path d="M0,-11 v16 M0,-4 l-12,-2 M0,-4 l12,-2 M0,5 l-6,12 M0,5 l8,11" fill="none" stroke-width="3.1" stroke-linecap="round"/></g>
-            <g transform="translate(475,96)"><circle cx="0" cy="-11" r="5.2"/><path d="M0,-5 v9 M0,0 l-9,4 M0,0 l9,3 M0,4 l-8,9 M0,4 l9,8" fill="none" stroke-width="3" stroke-linecap="round"/></g>
-            <g transform="translate(720,72)"><circle cx="0" cy="-15" r="5.6"/><path d="M0,-8 v18 M0,-1 l-9,11 M0,-1 l9,11 M0,10 l-5,11 M0,10 l6,11" fill="none" stroke-width="3" stroke-linecap="round"/></g>
-            <g transform="translate(205,146)"><circle cx="0" cy="-13" r="5.2"/><path d="M0,-7 v14 M0,-1 l-10,6 M0,-1 l10,6 M0,7 l-6,10 M0,7 l7,10" fill="none" stroke-width="2.9" stroke-linecap="round"/></g>
-          </g>
-        </svg>
-        <div class="roast-bubbles" id="roast-bubbles"></div>
-      </div>
-      <p class="roast-line" id="roast-line"></p>
+    <div class="waterline" aria-hidden="true">
+      <span class="lbl">海面 · 解套線 <span id="breakeven-price">—</span></span>
     </div>
 
-    <footer class="footer">
-      <p>每日台北收盤後更新 · 僅供娛樂 · 海面＝解套線（還原均價）</p>
-    </footer>
+    <svg class="ship" id="ship" viewBox="0 0 250 130" aria-label="點船，聽求救與船長訓話">
+      <path d="M12 44 L238 78 L190 104 L36 78 Z" fill="#232f3a"/>
+      <path d="M36 78 L190 104 L158 112 L50 96 Z" fill="#1a242d"/>
+      <rect x="46" y="40" width="70" height="20" rx="2" transform="rotate(9 46 40)" fill="#2f3f4d"/>
+      <rect class="tag" x="146" y="72" width="34" height="13" rx="2" transform="rotate(9 146 72)"/>
+      <text x="163" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#1a1200" transform="rotate(9 146 72)" font-family="Noto Sans TC">5386</text>
+      <g stroke="#dbe6f0" stroke-width="2.4" fill="none" stroke-linecap="round">
+        <g class="man wave" style="animation-delay:0s">
+          <circle cx="68" cy="30" r="3.3" fill="#dbe6f0" stroke="none"/>
+          <line x1="68" y1="33" x2="68" y2="42"/><line x1="68" y1="42" x2="64" y2="50"/><line x1="68" y1="42" x2="72" y2="50"/>
+          <line x1="68" y1="36" x2="61" y2="27"/><line x1="68" y1="36" x2="75" y2="27"/>
+        </g>
+        <g class="man wave" style="animation-delay:.35s">
+          <circle cx="48" cy="26" r="3.3" fill="#dbe6f0" stroke="none"/>
+          <line x1="48" y1="29" x2="48" y2="38"/><line x1="48" y1="38" x2="44" y2="46"/><line x1="48" y1="38" x2="52" y2="46"/>
+          <line x1="48" y1="32" x2="41" y2="23"/><line x1="48" y1="32" x2="55" y2="23"/>
+        </g>
+        <g class="man wave" style="animation-delay:.7s">
+          <circle cx="92" cy="40" r="3.3" fill="#dbe6f0" stroke="none"/>
+          <line x1="92" y1="43" x2="92" y2="52"/><line x1="92" y1="52" x2="88" y2="60"/><line x1="92" y1="52" x2="96" y2="60"/>
+          <line x1="92" y1="46" x2="85" y2="37"/><line x1="92" y1="46" x2="99" y2="37"/>
+        </g>
+      </g>
+    </svg>
+
+    <div class="surface" aria-hidden="true"></div>
+    <p class="tap-hint" id="hint">▲ 點船，聽船上的人怎麼喊</p>
+    <div class="bubbles" id="bubbles" aria-live="polite"></div>
+
+    <section class="sunk" aria-label="累計虧損">
+      <p class="k">累計虧損 · 總報酬</p>
+      <p class="big"><span id="loss-amount">—</span><small> 元</small></p>
+      <p class="depth">沉沒深度 <b id="loss-pct">—</b>% · 收盤 <span id="close-price">—</span></p>
+    </section>
+
+    <section class="spark" aria-label="下潛軌跡">
+      <p class="spark-lbl" id="spark-lbl">近 26 日下潛軌跡</p>
+      <svg id="spark-svg" viewBox="0 0 320 60" preserveAspectRatio="none" role="img" aria-label="近期處損走勢">
+        <defs>
+          <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e8703a" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#e8703a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path id="spark-fill" fill="url(#spark-grad)"/>
+        <polyline id="spark-line" fill="none" stroke="#e8703a" stroke-width="2"/>
+        <g id="spark-event" hidden>
+          <line id="spark-event-line" x1="0" y1="2" x2="0" y2="60" stroke="#f0b849" stroke-width="1" stroke-dasharray="3 3"/>
+          <text id="spark-event-text" x="0" y="10" text-anchor="end" fill="#f0b849" font-size="9" font-weight="700" font-family="Noto Sans TC">除權息</text>
+        </g>
+        <circle id="spark-dot" r="3.5" fill="#e8703a" stroke="#fff" stroke-width="1.5"/>
+      </svg>
+      <div class="spark-x">
+        <span id="spark-start">—</span>
+        <span id="spark-end">—</span>
+      </div>
+    </section>
+
+    <section class="wreck" aria-label="殘酷儀表板">
+      <article class="slab hero">
+        <p class="k">浮出海面還需漲</p>
+        <p class="v">+<span id="need-rise">—</span>%</p>
+      </article>
+      <article class="slab">
+        <p class="k">股利救生圈回本</p>
+        <p class="v"><span id="div-yield">—</span>%</p>
+      </article>
+      <article class="slab">
+        <p class="k">只靠配息浮出</p>
+        <p class="v"><span id="div-years">—</span>年</p>
+      </article>
+    </section>
+
+    <button type="button" class="cta" id="btn-share">生成每日沉沒快報 PNG →</button>
   </div>
 
   <canvas id="share-canvas" width="1080" height="1350" hidden aria-hidden="true"></canvas>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/app.js?v=12"></script>
 </body>
 </html>
