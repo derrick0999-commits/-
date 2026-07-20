@@ -1,3 +1,12 @@
+:root {
+  --sun: #f0b849;
+  --alarm: #e8703a;
+  --ink: #12202c;
+  --parch: #ece2c8;
+  --txt: #e6eef6;
+  --muted: #8fa6bb;
+}
+
 *,
 *::before,
 *::after {
@@ -6,47 +15,36 @@
   padding: 0;
 }
 
-:root {
-  --sky: #87bdd8;
-  --surface: #4eb8d9;
-  --mid: #1f6f9f;
-  --deep: #0a2840;
-  --abyss: #041018;
-  --foam: rgba(255, 255, 255, 0.75);
-  --ink: #e8f4fb;
-  --ink-soft: #9ec4d8;
-  --accent: #ff8c42;
-  --danger: #e85d3a;
-  --doc-bg: #f4ecd8;
-  --doc-ink: #2a2418;
-  --doc-border: #8a7350;
-  --font-display: "Noto Serif TC", "Songti TC", serif;
-  --font-body: "Noto Sans TC", "PingFang TC", sans-serif;
-}
-
-html {
-  font-size: 16px;
+html,
+body {
   height: 100%;
   height: 100dvh;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100%;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: none;
-  font-family: var(--font-body);
-  background: var(--abyss);
-  color: var(--ink);
-  line-height: 1.35;
+  font-family: "Noto Sans TC", sans-serif;
+  color: var(--txt);
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #7fb2d6 0%,
+    #4a90c2 18%,
+    #1e4d73 44%,
+    #0a2540 72%,
+    #01060f 100%
+  );
   -webkit-font-smoothing: antialiased;
 }
 
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow: hidden;
   padding:
     env(safe-area-inset-top, 0px)
     env(safe-area-inset-right, 0px)
@@ -54,390 +52,360 @@ body {
     env(safe-area-inset-left, 0px);
 }
 
-/* ── Header ── */
-.sim-header {
-  flex: 0 0 auto;
-  padding: 0.65rem 1rem 0.5rem;
-  background: linear-gradient(180deg, #0d3550 0%, var(--deep) 100%);
-}
-
-.sim-kicker {
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-}
-
-.sim-title {
-  margin-top: 0.15rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.35rem, 4.5vw, 1.85rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.sim-aside {
-  display: block;
-  font-size: 0.72em;
-  color: var(--accent);
-  letter-spacing: 0.16em;
-}
-
-.captain-quote {
-  margin-top: 0.55rem;
-  padding: 0.45rem 0.65rem;
-  border-left: 3px solid var(--accent);
-  background: rgba(255, 255, 255, 0.06);
-  font-size: clamp(0.72rem, 2.8vw, 0.84rem);
-  color: var(--foam);
-  font-style: normal;
-  line-height: 1.45;
-}
-
-.captain-quote::before {
-  content: "船長語錄 · ";
-  font-weight: 700;
-  color: var(--accent);
-  font-style: normal;
-}
-
-/* ── Ocean profile ── */
-.ocean-panel {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 220px;
-  padding: 0.45rem 0.75rem 0.35rem;
-  background: linear-gradient(180deg, var(--deep) 0%, var(--abyss) 100%);
-}
-
-.ocean-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.ocean-label {
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-}
-
-.ocean-label strong {
-  font-size: 1.05rem;
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.ocean-sub {
-  font-size: 0.62rem;
-  color: var(--ink-soft);
-  text-align: right;
-  max-width: 55%;
-}
-
-.ocean-frame {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: clamp(180px, 32vh, 320px);
-  border: 1px solid rgba(158, 196, 216, 0.22);
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--abyss);
-}
-
-#ocean-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: clamp(180px, 32vh, 320px);
-}
-
-.milestone-rail {
+.top {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 20px 0;
+  z-index: 6;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  color: rgba(18, 32, 44, 0.6);
+  font-weight: 500;
+}
+
+.title {
+  font-family: "Noto Serif TC", serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 9vw, 38px);
+  line-height: 0.98;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+
+.sub {
+  font-family: "Noto Serif TC", serif;
+  font-weight: 700;
+  font-size: clamp(1rem, 4.5vw, 19px);
+  color: var(--alarm);
+  letter-spacing: 0.1em;
+}
+
+.waterline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  height: 2px;
+  z-index: 4;
+  background: repeating-linear-gradient(90deg, var(--sun) 0 12px, transparent 12px 22px);
+  opacity: 0.85;
+}
+
+.waterline .lbl {
+  position: absolute;
+  left: 16px;
+  top: -20px;
+  font-size: 11px;
+  color: var(--sun);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.surface {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  bottom: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(74, 144, 194, 0.55),
+    rgba(30, 77, 115, 0.15) 40%,
+    transparent 70%
+  );
+}
+
+.ship {
+  position: absolute;
+  left: 56%;
+  top: 18%;
+  width: min(62vw, 250px);
+  transform: translateX(-50%) rotate(17deg);
+  z-index: 5;
+  cursor: pointer;
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.5));
+  transition: transform 0.3s;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ship:active {
+  transform: translateX(-50%) rotate(17deg) scale(0.98);
+}
+
+.tag {
+  fill: var(--sun);
+}
+
+.man {
+  transform-origin: center bottom;
+}
+
+.man.wave {
+  animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.tap-hint {
+  position: absolute;
+  left: 56%;
+  top: calc(30% - 4px);
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 11px;
+  color: #fff;
+  opacity: 0.55;
+  letter-spacing: 0.08em;
+  animation: blink 2.4s infinite;
   pointer-events: none;
 }
 
-.doc-sign {
+.tap-hint.is-hidden {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 0.8; }
+}
+
+.bubbles {
   position: absolute;
-  right: 0.35rem;
-  width: min(42%, 9.5rem);
-  padding: 0.28rem 0.38rem 0.32rem;
-  background: var(--doc-bg);
-  border: 1.5px solid var(--doc-border);
-  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35);
-  transform: translateY(-50%) rotate(0.6deg);
-  color: var(--doc-ink);
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
 }
 
-.doc-sign::before {
-  content: "說明";
+.speech {
   position: absolute;
-  top: -0.45rem;
-  left: 0.35rem;
-  padding: 0 0.25rem;
-  background: var(--doc-bg);
-  border: 1px solid var(--doc-border);
-  font-size: 0.48rem;
+  transform: translateX(-50%);
+  background: rgba(236, 226, 200, 0.96);
+  color: var(--ink);
+  font-family: "Noto Serif TC", serif;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  font-size: 13.5px;
+  padding: 7px 13px;
+  border-radius: 16px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  opacity: 0;
 }
 
-.doc-title {
-  font-family: var(--font-display);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--doc-border);
-  padding-bottom: 0.15rem;
-  margin-bottom: 0.15rem;
+.speech::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(236, 226, 200, 0.96);
+  border-bottom: 0;
 }
 
-.doc-body {
-  font-size: 0.5rem;
-  line-height: 1.35;
-  letter-spacing: 0.02em;
+.speech.cap {
+  background: rgba(240, 184, 73, 0.96);
 }
 
-.doc-depth {
-  margin-top: 0.12rem;
-  font-size: 0.48rem;
-  font-weight: 700;
-  color: #6b4f2a;
+.speech.cap::after {
+  border-top-color: rgba(240, 184, 73, 0.96);
 }
 
-/* ── Metric strip ── */
-.metric-strip {
-  flex: 0 0 auto;
-  padding: 0.55rem 1rem;
-  background: rgba(10, 40, 64, 0.92);
-  border-top: 1px solid rgba(158, 196, 216, 0.15);
+.speech.go {
+  animation: floatUp 3s ease-out forwards;
 }
 
-.metric-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.12rem;
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateX(-50%) translateY(0) scale(0.7); }
+  16% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(-30px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-42px) scale(1.02); }
+}
+
+.amb {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.13);
+  animation: rise linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes rise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50vh); }
+}
+
+.sunk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 42%;
+  z-index: 3;
   text-align: center;
 }
 
-.metric-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  color: var(--ink-soft);
+.sunk .k {
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
 }
 
-.metric-value {
-  font-family: var(--font-display);
-  font-size: clamp(1.55rem, 5vw, 2.2rem);
-  font-weight: 700;
-  color: var(--danger);
+.sunk .big {
+  font-family: "Noto Serif TC", serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 10vw, 46px);
+  color: var(--alarm);
+  line-height: 1.05;
+  margin-top: 6px;
   font-variant-numeric: tabular-nums;
 }
 
-.metric-value small {
-  font-size: 0.42em;
-  margin-left: 0.1em;
-  color: var(--ink-soft);
+.sunk .big small {
+  font-size: 0.39em;
 }
 
-.metric-sub {
-  font-size: 0.68rem;
-  color: var(--ink-soft);
+.sunk .depth {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #cddceb;
+  letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Cruel dashboard ── */
-.cruel-panel {
-  flex: 0 0 auto;
-  padding: 0.55rem 0.85rem 0.45rem;
-  background: #061018;
+.sunk .depth b {
+  color: var(--alarm);
+  font-size: 17px;
+  font-family: "Noto Serif TC", serif;
 }
 
-.panel-title {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  color: var(--accent);
-  margin-bottom: 0.45rem;
+.spark {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 60%;
+  z-index: 3;
 }
 
-.cruel-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.45rem;
+.spark-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
 }
 
-.cruel-card {
+.spark svg {
+  width: 100%;
+  height: 52px;
+  display: block;
+}
+
+.spark-x {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.45rem 0.35rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(232, 116, 58, 0.35);
-  border-radius: 4px;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wreck {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 84px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.slab {
+  flex: 1;
+  background: rgba(1, 6, 15, 0.55);
+  border: 1px solid rgba(232, 112, 58, 0.32);
+  border-radius: 10px;
+  padding: 11px 6px;
   text-align: center;
 }
 
-.cruel-label {
-  font-size: 0.52rem;
-  line-height: 1.25;
-  color: var(--ink-soft);
-  letter-spacing: 0.04em;
+.slab .k {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.3;
 }
 
-.cruel-value {
-  font-family: var(--font-display);
-  font-size: clamp(0.85rem, 3.2vw, 1rem);
-  font-weight: 700;
-  color: var(--danger);
+.slab .v {
+  font-family: "Noto Serif TC", serif;
+  font-weight: 900;
+  font-size: clamp(1rem, 4.5vw, 23px);
+  color: var(--alarm);
+  margin-top: 3px;
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Actions ── */
-.action-bar {
-  flex: 0 0 auto;
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.45rem 0.85rem 0.55rem;
-  background: #061018;
+.slab.hero .v {
+  font-size: clamp(1.1rem, 5vw, 27px);
 }
 
-.btn-share,
-.btn-roast {
-  flex: 1 1 0;
-  border: 0;
-  border-radius: 4px;
-  padding: 0.55rem 0.45rem;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.cta {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--alarm);
+  color: #1a0d05;
+  font-family: "Noto Serif TC", serif;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 0.08em;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn-share {
-  background: var(--accent);
-  color: #1a1208;
-}
-
-.btn-roast {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--foam);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.btn-share:active,
-.btn-roast:active {
+.cta:active {
   transform: scale(0.98);
 }
 
-/* ── Roast easter egg ── */
-.roast-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: rgba(4, 16, 24, 0.88);
-  backdrop-filter: blur(6px);
-}
-
-.roast-layer[hidden] {
-  display: none;
-}
-
-.roast-ship-wrap {
-  position: relative;
-  width: min(85vw, 360px);
-}
-
-.roast-ship {
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5));
-  animation: roast-rock 3s ease-in-out infinite;
-}
-
-@keyframes roast-rock {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
-}
-
-.roast-bubbles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.roast-bubble {
-  position: absolute;
-  bottom: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.15));
-  animation: roast-rise 2.5s linear infinite;
-}
-
-@keyframes roast-rise {
-  to { transform: translateY(-120px) scale(0.2); opacity: 0; }
-}
-
-.roast-line {
-  max-width: 20rem;
-  text-align: center;
-  font-size: clamp(0.95rem, 4vw, 1.15rem);
-  font-weight: 700;
-  color: var(--foam);
-  line-height: 1.45;
-  animation: roast-pop 0.35s ease-out both;
-}
-
-@keyframes roast-pop {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.footer {
-  flex: 0 0 auto;
-  text-align: center;
-  padding: 0.35rem 0.75rem 0.5rem;
-  font-size: 0.55rem;
-  color: var(--ink-soft);
-  background: var(--abyss);
-}
-
-@media (max-width: 380px) {
-  .cruel-grid {
-    grid-template-columns: 1fr;
+@media (max-height: 700px) {
+  .ship {
+    top: 15%;
+    width: min(56vw, 220px);
   }
 
-  .action-bar {
-    flex-direction: column;
+  .sunk {
+    top: 40%;
   }
 
-  .doc-sign {
-    width: 46%;
-    font-size: 0.92em;
-  }
-}
-
-@media (min-width: 720px) {
-  .page {
-    max-width: 720px;
-    margin: 0 auto;
+  .sunk .big {
+    font-size: clamp(1.7rem, 8vw, 38px);
   }
 
-  .ocean-frame {
-    min-height: 340px;
+  .spark {
+    top: 58%;
+  }
+
+  .wreck {
+    bottom: 76px;
+  }
+
+  .slab .v {
+    font-size: clamp(0.9rem, 4vw, 20px);
   }
 }
