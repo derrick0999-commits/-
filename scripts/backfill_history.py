@@ -57,7 +57,7 @@ def main() -> int:
                 )
                 close_price = quote
 
-        metrics = compute_metrics(config, close_price)
+        metrics = compute_metrics(config, close_price, date_str)
         by_date[date_str] = {
             "date": date_str,
             "close_price": round(close_price, 2),
