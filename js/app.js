@@ -127,6 +127,85 @@ function enrichEntries(entries, config, actions) {
   });
 }
 
+/* ── DER-45 L2：三條守恆 assertion（載入時執行；僅呼叫、不改算法） ── */
+
+function showDevAssertBanner(failures) {
+  let bar = document.getElementById("dev-assert-banner");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "dev-assert-banner";
+    bar.setAttribute("role", "alert");
+    Object.assign(bar.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      right: "0",
+      zIndex: "9999",
+      padding: "10px 14px",
+      background: "#b00020",
+      color: "#fff",
+      fontFamily: "ui-monospace, Menlo, monospace",
+      fontSize: "12px",
+      lineHeight: "1.4",
+      whiteSpace: "pre-wrap",
+    });
+    document.body.prepend(bar);
+  }
+  bar.textContent = `開發警示 · 守恆 assertion FAIL\n${failures.join("\n")}`;
+}
+
+function runConservationAssertions(config, actions) {
+  const results = [];
+  const failures = [];
+  const origShares = Number(config.shares) || 9000;
+  const costBasis = Number(config.cost_basis) || 4861980;
+  const eventDate = actions[0]?.date || "2026-07-20";
+
+  // a) adjustPrice(378, '2026-07-17') → 251.0 ±0.01
+  const adj = adjustPrice(378, "2026-07-17", actions);
+  const aOk = Math.abs(adj - 251.0) <= 0.01;
+  const aMsg = `a. adjustPrice(378, '2026-07-17') = ${adj} → expect 251.0 ±0.01 → ${aOk ? "PASS" : "FAIL"}`;
+  results.push(aMsg);
+  if (!aOk) failures.push(aMsg);
+
+  // b) 資產守恆：378×9000 === 251×13500 + 13500 === 3,402,000
+  const preAssets = 378 * origShares;
+  const postPos = derivePosition(config, eventDate, actions);
+  const postAssets = 251 * postPos.shares + postPos.cashReceived;
+  const bOk =
+    Math.abs(preAssets - 3402000) < 1e-6 &&
+    Math.abs(postAssets - 3402000) < 1e-6 &&
+    Math.abs(preAssets - postAssets) < 1e-6;
+  const bMsg =
+    `b. assets ${preAssets} (378×${origShares}) === ${postAssets} ` +
+    `(251×${postPos.shares}+${postPos.cashReceived}) === 3402000 → ${bOk ? "PASS" : "FAIL"}`;
+  results.push(bMsg);
+  if (!bOk) failures.push(bMsg);
+
+  // c) 除權息事件日總報酬連續：3402000/4861980 − 1 === −30.03% ±0.01%
+  const pre = computeDualMetrics(config, 378, "2026-07-17", actions);
+  const post = computeDualMetrics(config, 251, eventDate, actions);
+  const totalReturnPct = (3402000 / costBasis - 1) * 100;
+  const cRateOk = Math.abs(totalReturnPct - -30.03) <= 0.01;
+  const cContinuous = Math.abs(pre.loss_pct - post.loss_pct) <= 0.01;
+  const cDepthOk = Math.abs(pre.loss_pct - 30.03) <= 0.01;
+  const cPass = cRateOk && cContinuous && cDepthOk;
+  const cMsg =
+    `c. total return ${totalReturnPct.toFixed(4)}% (3402000÷${costBasis}−1) ` +
+    `≈ −30.03%; pre=${pre.loss_pct.toFixed(2)}% post=${post.loss_pct.toFixed(2)}% continuous → ` +
+    `${cPass ? "PASS" : "FAIL"}`;
+  results.push(cMsg);
+  if (!cPass) failures.push(cMsg);
+
+  console.log("[DER-45 conservation assertions]");
+  results.forEach((line) => console.log(line));
+  if (failures.length) {
+    console.error("[DER-45] conservation assertion FAIL:", failures);
+    showDevAssertBanner(failures);
+  }
+  return failures.length === 0;
+}
+
 function computeCruelMetrics(latest, actions) {
   const priceLossPct = latest.price_loss_pct;
   const priceLossAmount = latest.price_loss_amount;
@@ -276,18 +355,18 @@ function drawShareCard(latest, cruel, config) {
   ctx.fillText("平步向下", 60, 175);
 
   ctx.fillStyle = "#8fa6bb";
-  ctx.font = "500 28px 'Noto Sans TC', sans-serif";
+  ctx.font = "400 28px 'Noto Sans TC', sans-serif";
   ctx.fillText("5386.TWO · 即時沉沒模擬器", 60, 230);
 
   ctx.fillStyle = "#e8703a";
   ctx.font = "900 96px 'Noto Serif TC', serif";
   ctx.fillText(formatNumber(latest.loss_amount), 60, 380);
   ctx.fillStyle = "#cddceb";
-  ctx.font = "500 36px 'Noto Sans TC', sans-serif";
+  ctx.font = "400 36px 'Noto Sans TC', sans-serif";
   ctx.fillText("元", 60 + ctx.measureText(formatNumber(latest.loss_amount)).width + 12, 380);
 
   ctx.fillStyle = "#e6eef6";
-  ctx.font = "500 32px 'Noto Sans TC', sans-serif";
+  ctx.font = "400 32px 'Noto Sans TC', sans-serif";
   ctx.fillText(`沉沒深度 ${formatPct(latest.loss_pct)}% · 收盤 ${formatPct(latest.close_price)}`, 60, 450);
   ctx.fillText(`海面解套線 ${formatPct(latest.restored_buy_price)} · ${formatNumber(latest.shares)} 股`, 60, 500);
 
@@ -302,7 +381,7 @@ function drawShareCard(latest, cruel, config) {
     ctx.lineWidth = 2;
     ctx.strokeRect(60, y, w - 120, 120);
     ctx.fillStyle = "#8fa6bb";
-    ctx.font = "500 28px 'Noto Sans TC', sans-serif";
+    ctx.font = "400 28px 'Noto Sans TC', sans-serif";
     ctx.fillText(label, 80, y + 45);
     ctx.fillStyle = "#e8703a";
     ctx.font = "900 52px 'Noto Serif TC', serif";
@@ -359,6 +438,7 @@ async function loadData() {
     const actionsRaw = actionsRes.ok ? await actionsRes.json() : { actions: [] };
     cachedActions = normalizeActions(actionsRaw);
     cachedConfig = data.config_snapshot || {};
+    runConservationAssertions(cachedConfig, cachedActions);
     cachedEntries = enrichEntries(data.entries || [], cachedConfig, cachedActions);
 
     if (cachedEntries.length === 0) {
