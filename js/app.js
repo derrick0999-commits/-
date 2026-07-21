@@ -291,11 +291,11 @@ function popSpeech(line) {
   const el = document.createElement("div");
   el.className = `speech go${line.w === "cap" ? " cap" : ""}`;
   el.textContent = line.t;
-  // 船置中 56%；船頭小人偏左，氣泡起點對準頭頂附近
+  // 船置中 56%；對準小人頭頂（v2.5：hero 內上半冒出）
   const cx = hero.clientWidth * 0.5 + (Math.random() * 36 - 18);
   el.style.left = `${cx}px`;
-  // 小人頭頂上方冒出 → floatUp 微幅上飄；不壓海面線、不碰下方 tap-hint
-  el.style.top = "15%";
+  // 小人頭頂上方 → floatUp 微幅上飄；低於標題、高於 tap-hint／海面線
+  el.style.top = "18%";
   bubbles.appendChild(el);
   setTimeout(() => el.remove(), 3100);
 }
