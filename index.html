@@ -33,9 +33,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=5">
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
+  <!-- DER-46：六區塊文流 top → hero → sunk → spark → wreck → cta -->
   <div class="stage" id="stage">
     <header class="top">
       <p class="eyebrow">5386.TWO · 即時沉沒模擬器</p>
@@ -78,56 +79,54 @@
       <div class="bubbles" id="bubbles" aria-live="polite"></div>
     </section>
 
-    <section class="panel">
-      <section class="sunk" aria-label="累計虧損">
-        <p class="k">累計虧損 · 總報酬</p>
-        <p class="big"><span id="loss-amount">—</span><small> 元</small></p>
-        <p class="depth">沉沒深度 <b id="loss-pct">—</b>% · 收盤 <span id="close-price">—</span></p>
-      </section>
+    <section class="sunk" aria-label="累計虧損">
+      <p class="k">累計虧損 · 總報酬</p>
+      <p class="big"><span id="loss-amount">—</span><small> 元</small></p>
+      <p class="depth">沉沒深度 <b id="loss-pct">—</b>% · 收盤 <span id="close-price">—</span></p>
+    </section>
 
-      <section class="spark" aria-label="下潛軌跡">
-        <p class="spark-lbl" id="spark-lbl">近 26 日下潛軌跡</p>
-        <svg id="spark-svg" viewBox="0 0 320 60" preserveAspectRatio="none" role="img" aria-label="近期處損走勢">
-          <defs>
-            <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#e8703a" stop-opacity=".35"/>
-              <stop offset="1" stop-color="#e8703a" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path id="spark-fill" fill="url(#spark-grad)"/>
-          <polyline id="spark-line" fill="none" stroke="#e8703a" stroke-width="2"/>
-          <g id="spark-event" hidden>
-            <line id="spark-event-line" x1="0" y1="2" x2="0" y2="60" stroke="#f0b849" stroke-width="1" stroke-dasharray="3 3"/>
-            <text id="spark-event-text" x="0" y="10" text-anchor="end" fill="#f0b849" font-size="9" font-weight="700" font-family="Noto Sans TC">除權息</text>
-          </g>
-          <circle id="spark-dot" r="3.5" fill="#e8703a" stroke="#fff" stroke-width="1.5"/>
-        </svg>
-        <div class="spark-x">
-          <span id="spark-start">—</span>
-          <span id="spark-end">—</span>
-        </div>
-      </section>
+    <section class="spark" aria-label="下潛軌跡">
+      <p class="spark-lbl" id="spark-lbl">近 26 日下潛軌跡</p>
+      <svg id="spark-svg" viewBox="0 0 320 60" preserveAspectRatio="none" role="img" aria-label="近期處損走勢">
+        <defs>
+          <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e8703a" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#e8703a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path id="spark-fill" fill="url(#spark-grad)"/>
+        <polyline id="spark-line" fill="none" stroke="#e8703a" stroke-width="2"/>
+        <g id="spark-event" hidden>
+          <line id="spark-event-line" x1="0" y1="2" x2="0" y2="60" stroke="#f0b849" stroke-width="1" stroke-dasharray="3 3"/>
+          <text id="spark-event-text" x="0" y="10" text-anchor="end" fill="#f0b849" font-size="9" font-weight="700" font-family="Noto Sans TC">除權息</text>
+        </g>
+        <circle id="spark-dot" r="3.5" fill="#e8703a" stroke="#fff" stroke-width="1.5"/>
+      </svg>
+      <div class="spark-x">
+        <span id="spark-start">—</span>
+        <span id="spark-end">—</span>
+      </div>
+    </section>
 
-      <section class="wreck" aria-label="殘酷儀表板">
-        <article class="slab hero-slab">
-          <p class="k">浮出海面還需漲</p>
-          <p class="v">+<span id="need-rise">—</span>%</p>
-        </article>
-        <article class="slab">
-          <p class="k">股利救生圈回本</p>
-          <p class="v"><span id="div-yield">—</span>%</p>
-        </article>
-        <article class="slab">
-          <p class="k">只靠配息浮出</p>
-          <p class="v"><span id="div-years">—</span>年</p>
-        </article>
-      </section>
+    <section class="wreck" aria-label="殘酷儀表板">
+      <article class="slab hero-slab">
+        <p class="k">浮出海面還需漲</p>
+        <p class="v">+<span id="need-rise">—</span>%</p>
+      </article>
+      <article class="slab">
+        <p class="k">股利救生圈回本</p>
+        <p class="v"><span id="div-yield">—</span>%</p>
+      </article>
+      <article class="slab">
+        <p class="k">只靠配息浮出</p>
+        <p class="v"><span id="div-years">—</span>年</p>
+      </article>
     </section>
 
     <button type="button" class="cta" id="btn-share">生成每日沉沒快報 PNG →</button>
   </div>
 
   <canvas id="share-canvas" width="1080" height="1350" hidden aria-hidden="true"></canvas>
-  <script src="js/app.js?v=16"></script>
+  <script src="js/app.js?v=17"></script>
 </body>
 </html>

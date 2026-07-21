@@ -38,10 +38,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Stage：流式 flex；底部只留 safe-area，避免 CTA 下多一條空白帶 ── */
+/*
+  DER-46：六區塊文流（top / hero / sunk / spark / wreck / cta）
+  .stage = flex column + space-between + safe-area；CTA 貼底無空白帶
+  absolute 僅限 .hero 內部（船／海面／氣泡／tap-hint）
+*/
 .stage {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   min-height: 100dvh;
   height: 100dvh;
@@ -49,8 +54,6 @@ body {
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  gap: clamp(0.4rem, 1.2vh, 0.7rem);
-  /* 與 body 同漸層：就算露底也連續，無可見斷層 */
   background: linear-gradient(
     180deg,
     #7fb2d6 0%,
@@ -66,14 +69,12 @@ body {
     env(safe-area-inset-left, 0px);
 }
 
-/* Hero 允許氣泡微幅超出上緣但不蓋標題：標題在 Hero 外且 z 較高 */
-.hero {
-  overflow: hidden;
-}
-
+/* ① 標題 */
 .top {
+  flex: 0 0 auto;
   position: relative;
   z-index: 8;
+  padding: 4px 20px 0;
 }
 
 .eyebrow {
@@ -100,28 +101,30 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* ── Hero：適度 flex-grow 填滿中段；船／海面內部 absolute；裁切氣泡不蓋標題 ── */
+/* ② Hero：彈性吃掉中段餘白；內部才 absolute */
 .hero {
   position: relative;
   flex: 1 1 auto;
-  min-height: clamp(130px, 22vh, 180px);
-  max-height: min(240px, 30vh);
+  min-height: clamp(150px, 26vh, 220px);
+  max-height: min(260px, 34vh);
   margin: 0;
   overflow: hidden;
   contain: paint;
 }
 
+/* v2.5 比例映射到 hero 盒：船上／hint 中／海面下，三者垂直分開 */
 .waterline {
   position: absolute;
   left: 0;
   right: 0;
-  top: 42%;
+  top: 62%;
   height: 2px;
   z-index: 4;
   background: repeating-linear-gradient(90deg, var(--sun) 0 12px, transparent 12px 22px);
   opacity: 0.85;
 }
 
+/* 解套線左端淨空（船在 56%，不遮 label） */
 .waterline .lbl {
   position: absolute;
   left: 16px;
@@ -130,13 +133,14 @@ body {
   color: var(--sun);
   font-weight: 700;
   letter-spacing: 0.04em;
+  max-width: 42%;
 }
 
 .surface {
   position: absolute;
   left: 0;
   right: 0;
-  top: 42%;
+  top: 62%;
   bottom: 0;
   z-index: 5;
   pointer-events: none;
@@ -152,7 +156,7 @@ body {
   position: absolute;
   left: 56%;
   top: 8%;
-  width: min(58vw, 230px);
+  width: min(64vw, 250px);
   transform: translateX(-50%) rotate(17deg);
   z-index: 5;
   cursor: pointer;
@@ -185,11 +189,11 @@ body {
   50% { transform: rotate(6deg); }
 }
 
+/* tap 提示：船身下方、緊鄰海面線上方（靜態） */
 .tap-hint {
-  /* 船身下方、緊鄰海面線上方（靜態引導；與小人頭頂氣泡區垂直分開） */
   position: absolute;
   left: 56%;
-  top: 42%;
+  top: 62%;
   transform: translate(-50%, calc(-100% - 6px));
   z-index: 6;
   font-size: 11px;
@@ -206,7 +210,6 @@ body {
   display: none;
 }
 
-/* 氣泡顯示期間淡化，與小人頭頂氣泡區垂直分開（雙保險） */
 .hero.is-speaking .tap-hint {
   opacity: 0;
   animation: none;
@@ -222,7 +225,6 @@ body {
   inset: 0;
   z-index: 7;
   pointer-events: none;
-  /* 氣泡區在上半（小人頭頂），不蓋海面線下的 tap-hint */
   overflow: visible;
 }
 
@@ -265,12 +267,12 @@ body {
   animation: floatUp 3s ease-out forwards;
 }
 
+/* 小人頭頂冒出 → 微幅上飄；不碰標題、不碰下方 tap-hint */
 @keyframes floatUp {
-  /* 小人頭頂冒出 → 微幅上飄；不碰標題、不碰下方 tap-hint */
   0% { opacity: 0; transform: translateX(-50%) translateY(0) scale(0.7); }
   16% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1); }
-  80% { opacity: 1; transform: translateX(-50%) translateY(-26px) scale(1); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-34px) scale(1.02); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(-28px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-38px) scale(1.02); }
 }
 
 .amb {
@@ -287,14 +289,7 @@ body {
   to { transform: translateY(-40vh); }
 }
 
-/* ── 主數字／走勢／殘酷三格：緊湊一組，不被拉開 ── */
-.panel {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.45rem, 1.4vh, 0.85rem);
-}
-
+/* ③ 累計虧損 */
 .sunk {
   flex: 0 0 auto;
   text-align: center;
@@ -336,6 +331,7 @@ body {
   font-family: "Noto Serif TC", serif;
 }
 
+/* ④ sparkline */
 .spark {
   flex: 0 0 auto;
   padding: 0 24px;
@@ -364,6 +360,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ⑤ 殘酷三格 */
 .wreck {
   flex: 0 0 auto;
   display: flex;
@@ -400,11 +397,11 @@ body {
   font-size: clamp(1.1rem, 5vw, 27px);
 }
 
-/* CTA：貼齊螢幕底；safe-area 吃進按鈕內 padding，下方無深色空白帶 */
+/* ⑥ CTA：貼齊螢幕底；safe-area 吃進按鈕內 padding */
 .cta {
   flex: 0 0 auto;
-  margin: auto 0 0;
   width: 100%;
+  margin: 0;
   padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
   border: none;
   border-radius: 12px 12px 0 0;
@@ -423,15 +420,15 @@ body {
   transform: scale(0.98);
 }
 
-/* 矮螢幕：縮小 Hero／字級，允許極小捲動優於重疊 */
+/* 矮螢幕：縮 Hero／字級，允許極小捲動優於重疊 */
 @media (max-height: 700px) {
   .hero {
-    min-height: 110px;
-    max-height: 26vh;
+    min-height: 120px;
+    max-height: 28vh;
   }
 
   .ship {
-    width: min(52vw, 200px);
+    width: min(56vw, 210px);
   }
 
   .sunk .big {
@@ -443,18 +440,26 @@ body {
   }
 
   .cta {
-    padding: 12px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     font-size: 15px;
   }
 }
 
 @media (max-height: 600px) {
   .hero {
-    min-height: 96px;
-    max-height: 22vh;
+    min-height: 100px;
+    max-height: 24vh;
   }
 
   .sunk .depth {
     margin-top: 4px;
+  }
+
+  .wreck {
+    gap: 6px;
+  }
+
+  .slab {
+    padding: 8px 4px;
   }
 }
