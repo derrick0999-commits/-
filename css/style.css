@@ -66,10 +66,14 @@ body {
     env(safe-area-inset-left, 0px);
 }
 
+/* Hero 允許氣泡微幅超出上緣但不蓋標題：標題在 Hero 外且 z 較高 */
+.hero {
+  overflow: hidden;
+}
+
 .top {
-  flex: 0 0 auto;
-  padding: 4px 20px 0;
-  z-index: 2;
+  position: relative;
+  z-index: 8;
 }
 
 .eyebrow {
@@ -182,9 +186,10 @@ body {
 }
 
 .tap-hint {
+  /* 船身下方、緊鄰海面線上方（靜態引導） */
   position: absolute;
   left: 56%;
-  top: 4%;
+  top: calc(42% - 1.35rem);
   transform: translateX(-50%);
   z-index: 6;
   font-size: 11px;
@@ -194,10 +199,17 @@ body {
   animation: blink 2.4s infinite;
   pointer-events: none;
   white-space: nowrap;
+  transition: opacity 0.25s ease;
 }
 
 .tap-hint.is-hidden {
   display: none;
+}
+
+/* 氣泡顯示期間淡化，與小人頭頂氣泡區垂直分開 */
+.hero.is-speaking .tap-hint {
+  opacity: 0.12;
+  animation: none;
 }
 
 @keyframes blink {
@@ -210,6 +222,8 @@ body {
   inset: 0;
   z-index: 7;
   pointer-events: none;
+  /* 氣泡區在上半（小人頭頂），不蓋海面線下的 tap-hint */
+  overflow: visible;
 }
 
 .speech {
@@ -225,6 +239,7 @@ body {
   white-space: nowrap;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   opacity: 0;
+  max-width: 90%;
 }
 
 .speech::after {
@@ -251,11 +266,11 @@ body {
 }
 
 @keyframes floatUp {
-  /* 只在 Hero 內微幅上飄，不衝出標題層 */
+  /* 小人頭頂冒出 → 微幅上飄；不碰標題、不碰下方 tap-hint */
   0% { opacity: 0; transform: translateX(-50%) translateY(0) scale(0.7); }
-  16% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); }
-  80% { opacity: 1; transform: translateX(-50%) translateY(-16px) scale(1); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-22px) scale(1.02); }
+  16% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(-26px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-34px) scale(1.02); }
 }
 
 .amb {

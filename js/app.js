@@ -279,6 +279,9 @@ function drawSparkChart(entries, actions) {
 }
 
 /* ── Speech bubbles ── */
+/* 氣泡區：小人頭頂上方（船頭上緋）；tap-hint 在船身下方／海面線上，垂直分開 */
+
+let speakingClearTimer = null;
 
 function popSpeech(line) {
   const hero = document.getElementById("hero");
@@ -288,17 +291,25 @@ function popSpeech(line) {
   const el = document.createElement("div");
   el.className = `speech go${line.w === "cap" ? " cap" : ""}`;
   el.textContent = line.t;
-  const cx = hero.clientWidth * 0.5 + (Math.random() * 40 - 20);
+  // 船置中 56%；船頭小人偏左，氣泡起點對準頭頂附近
+  const cx = hero.clientWidth * 0.5 + (Math.random() * 36 - 18);
   el.style.left = `${cx}px`;
-  // 從船附近冒出，上飄幅度小，不蓋標題
-  el.style.top = "42%";
+  // 小人頭頂上方冒出 → floatUp 微幅上飄；不壓海面線、不碰下方 tap-hint
+  el.style.top = "15%";
   bubbles.appendChild(el);
   setTimeout(() => el.remove(), 3100);
 }
 
 function onShipClick() {
-  const hint = document.getElementById("hint");
-  if (hint) hint.classList.add("is-hidden");
+  const hero = document.getElementById("hero");
+  if (hero) {
+    hero.classList.add("is-speaking");
+    clearTimeout(speakingClearTimer);
+    // 第二顆氣泡延遲 650ms + 動畫 ~3.1s
+    speakingClearTimer = setTimeout(() => {
+      hero.classList.remove("is-speaking");
+    }, 3900);
+  }
   popSpeech(SPEECH_LINES[speechIndex % SPEECH_LINES.length]);
   speechIndex += 1;
   setTimeout(() => {
